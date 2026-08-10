@@ -166,14 +166,14 @@ export const scenarios: Scenario[] = [
     steps: [
       {
         stepNumber: 1,
-        title: 'Step 1: Fed Purchases $50B Treasuries from Bank A (Commercial Bank)',
+        title: 'Step 1: Fed Purchases $50 Treasuries from Bank A (Commercial Bank)',
         subtitle: 'QE with a Commercial Bank Counterparty',
-        description: 'The Fed purchases $50B of Treasuries directly from Primary Dealer Bank A.',
-        accountingExplanation: 'Fed Assets (Treasuries) increase by $50B; Fed Liabilities (Bank A Reserves) increase by $50B. Bank A swaps Treasuries (-$50B) for Reserves (+$50B). Bank A liabilities do not change!',
+        description: 'The Fed purchases $50 of Treasuries directly from Primary Dealer Bank A.',
+        accountingExplanation: 'Fed Assets (Treasuries) increase by $50; Fed Liabilities (Bank A Reserves) increase by $50. Bank A swaps Treasuries (-$50) for Reserves (+$50). Bank A liabilities do not change!',
         macroImpact: {
-          m0Change: '+$50B ($1,150B)',
-          m1Change: 'Unchanged ($1,350B)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: '+$50 ($1,150)',
+          m1Change: 'Unchanged ($1,350)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'QE with a commercial bank expands Base Money (M0/Reserves) but DOES NOT expand Broad Money (M1) because no customer deposit accounts are involved.',
         },
         entityDeltas: {
@@ -196,7 +196,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'central_bank',
             assetType: 'US Treasuries',
             amount: 50,
-            description: 'Bank A transfers $50B Treasuries to Fed SOMA portfolio',
+            description: 'Bank A transfers $50 Treasuries to Fed SOMA portfolio',
           },
           {
             id: 'fm_2_1_2',
@@ -204,7 +204,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_a',
             assetType: 'New Reserve Creation',
             amount: 50,
-            description: 'Fed credits $50B newly created reserves to Bank A',
+            description: 'Fed credits $50 newly created reserves to Bank A',
           },
         ],
         journalEntries: [
@@ -213,7 +213,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 1,
             timestamp: '09:15:00',
             title: 'QE Open Market Purchase from Commercial Bank',
-            description: 'Fed buys $50B Treasuries from Bank A.',
+            description: 'Fed buys $50 Treasuries from Bank A.',
             entries: [
               { entityId: 'central_bank', accountName: 'US Treasuries (SOMA)', type: 'debit', amount: 50, category: 'asset' },
               { entityId: 'central_bank', accountName: 'Bank A Reserves', type: 'credit', amount: 50, category: 'liability' },
@@ -226,14 +226,14 @@ export const scenarios: Scenario[] = [
 
       {
         stepNumber: 2,
-        title: 'Step 2: Fed Purchases $50B Treasuries from Pension Fund (Non-Bank)',
+        title: 'Step 2: Fed Purchases $50 Treasuries from Pension Fund (Non-Bank)',
         subtitle: 'QE with a Non-Bank Financial Counterparty',
-        description: 'The Fed purchases $50B of Treasuries from the Pension Fund. Since the Pension Fund cannot hold reserves at the Fed, the transaction settles through Bank A.',
-        accountingExplanation: 'Fed Assets (Treasuries) +$50B; Fed Liabilities (Bank A Reserves) +$50B. Bank A receives $50B Reserves at Fed (Asset) and credits Pension Fund Deposit (Liability) +$50B. Pension Fund swaps Treasuries (-$50B) for Bank Deposit (+$50B).',
+        description: 'The Fed purchases $50 of Treasuries from the Pension Fund. Since the Pension Fund cannot hold reserves at the Fed, the transaction settles through Bank A.',
+        accountingExplanation: 'Fed Assets (Treasuries) +$50; Fed Liabilities (Bank A Reserves) +$50. Bank A receives $50 Reserves at Fed (Asset) and credits Pension Fund Deposit (Liability) +$50. Pension Fund swaps Treasuries (-$50) for Bank Deposit (+$50).',
         macroImpact: {
-          m0Change: '+$50B ($1,200B total Fed size)',
-          m1Change: '+$50B ($1,400B broad money)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: '+$50 ($1,200 total Fed size)',
+          m1Change: '+$50 ($1,400 broad money)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'QE with a non-bank institution CREATES NEW BROAD MONEY (M1)! The commercial bank balance sheet expands on both sides.',
         },
         entityDeltas: {
@@ -259,7 +259,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'central_bank',
             assetType: 'US Treasuries',
             amount: 50,
-            description: 'Pension Fund sells $50B Treasuries to Fed via dealer',
+            description: 'Pension Fund sells $50 Treasuries to Fed via dealer',
           },
           {
             id: 'fm_2_2_2',
@@ -267,7 +267,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_a',
             assetType: 'New Reserves',
             amount: 50,
-            description: 'Fed credits $50B Reserves to clearing Bank A',
+            description: 'Fed credits $50 Reserves to clearing Bank A',
           },
           {
             id: 'fm_2_2_3',
@@ -275,7 +275,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'pension_fund',
             assetType: 'Commercial Bank Deposit',
             amount: 50,
-            description: 'Bank A credits $50B deposit to Pension Fund account',
+            description: 'Bank A credits $50 deposit to Pension Fund account',
           },
         ],
         journalEntries: [
@@ -284,7 +284,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 2,
             timestamp: '11:00:00',
             title: 'QE Open Market Purchase from Non-Bank Financial',
-            description: 'Fed buys $50B Treasuries from Pension Fund via Bank A.',
+            description: 'Fed buys $50 Treasuries from Pension Fund via Bank A.',
             entries: [
               { entityId: 'central_bank', accountName: 'US Treasuries (SOMA)', type: 'debit', amount: 50, category: 'asset' },
               { entityId: 'central_bank', accountName: 'Bank A Reserves', type: 'credit', amount: 50, category: 'liability' },
@@ -302,11 +302,11 @@ export const scenarios: Scenario[] = [
         title: 'Step 3: Comparison & Macro Analysis',
         subtitle: 'Key Economic Structural Insight',
         description: 'Compare the two steps side by side: Step 1 swapped Bank A assets (Bonds → Reserves) without changing broad money. Step 2 created NEW commercial bank deposits for the Pension Fund, expanding M1 broad money.',
-        accountingExplanation: 'Summary: Central Bank balance sheet grew by $100B. Total Bank Reserves grew by $100B. Broad money M1 grew by ONLY $50B (from the non-bank purchase).',
+        accountingExplanation: 'Summary: Central Bank balance sheet grew by $100. Total Bank Reserves grew by $100. Broad money M1 grew by ONLY $50 (from the non-bank purchase).',
         macroImpact: {
-          m0Change: '+$100B ($1,200B total)',
-          m1Change: '+$50B ($1,400B total)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: '+$100 ($1,200 total)',
+          m1Change: '+$50 ($1,400 total)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'This fundamental distinction explains why QE post-2008 (mostly bank counterparty) did not cause broad CPI inflation, whereas post-2020 fiscal stimulus + non-bank purchases expanded M1 rapidly.',
         },
         entityDeltas: {
@@ -334,14 +334,14 @@ export const scenarios: Scenario[] = [
     steps: [
       {
         stepNumber: 1,
-        title: 'Step 1: Bank A Grants a $40B Business Loan to Individual',
+        title: 'Step 1: Bank A Grants a $40 Business Loan to Individual',
         subtitle: 'Endogenous Money Creation out of Thin Air',
-        description: 'Bank A approves a $40B commercial loan to Private Individual. Instead of taking reserves or existing deposits, Bank A simply writes up $40B on both sides of its balance sheet.',
-        accountingExplanation: 'Bank A Assets: Loans +$40B. Bank A Liabilities: Individual Customer Deposit +$40B. Individual Assets: Bank Deposit +$40B. Individual Liabilities: Bank Loan +$40B.',
+        description: 'Bank A approves a $40 commercial loan to Private Individual. Instead of taking reserves or existing deposits, Bank A simply writes up $40 on both sides of its balance sheet.',
+        accountingExplanation: 'Bank A Assets: Loans +$40. Bank A Liabilities: Individual Customer Deposit +$40. Individual Assets: Bank Deposit +$40. Individual Liabilities: Bank Loan +$40.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B)',
-          m1Change: '+$40B ($1,390B)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: '+$40 ($1,390)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'Banks create new money (deposits) whenever they issue loans. No central bank reserves were created or moved in this step!',
         },
         entityDeltas: {
@@ -365,7 +365,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'individual',
             assetType: 'Newly Created Deposit',
             amount: 40,
-            description: 'Bank A credits $40B deposit into Individual account upon loan agreement',
+            description: 'Bank A credits $40 deposit into Individual account upon loan agreement',
           },
         ],
         journalEntries: [
@@ -374,7 +374,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 1,
             timestamp: '09:30:00',
             title: 'Bank Loan Origination',
-            description: 'Bank A grants $40B loan, creating $40B new deposit.',
+            description: 'Bank A grants $40 loan, creating $40 new deposit.',
             entries: [
               { entityId: 'bank_a', accountName: 'Commercial Loans', type: 'debit', amount: 40, category: 'asset' },
               { entityId: 'bank_a', accountName: 'Individual Deposits', type: 'credit', amount: 40, category: 'liability' },
@@ -387,14 +387,14 @@ export const scenarios: Scenario[] = [
 
       {
         stepNumber: 2,
-        title: 'Step 2: Individual Transfers $20B to Bank B for a Property Purchase',
+        title: 'Step 2: Individual Transfers $20 to Bank B for a Property Purchase',
         subtitle: 'Interbank Settlement via Central Bank Reserves',
-        description: 'Individual spends $20B of the new deposit to buy property from an individual banking at Bank B.',
-        accountingExplanation: 'Individual shifts $20B from Bank A Deposits to Bank B Deposits. Bank A loses $20B deposit liability and $20B Fed Reserves. Bank B gains $20B deposit liability and $20B Fed Reserves. Fed shifts $20B reserves from Bank A to Bank B.',
+        description: 'Individual spends $20 of the new deposit to buy property from an individual banking at Bank B.',
+        accountingExplanation: 'Individual shifts $20 from Bank A Deposits to Bank B Deposits. Bank A loses $20 deposit liability and $20 Fed Reserves. Bank B gains $20 deposit liability and $20 Fed Reserves. Fed shifts $20 reserves from Bank A to Bank B.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B)',
-          m1Change: 'Unchanged ($1,390B)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: 'Unchanged ($1,390)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'Interbank transfers do NOT change total money supply or total reserves — reserves merely reallocate between banks at the Central Bank settlement layer.',
         },
         entityDeltas: {
@@ -422,7 +422,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'central_bank',
             assetType: 'Reserves Transfer',
             amount: 20,
-            description: 'Bank A sends $20B Reserves to Fed for clearing',
+            description: 'Bank A sends $20 Reserves to Fed for clearing',
           },
           {
             id: 'fm_3_2_2',
@@ -430,7 +430,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_b',
             assetType: 'Reserves Transfer',
             amount: 20,
-            description: 'Fed credits $20B Reserves to Bank B account',
+            description: 'Fed credits $20 Reserves to Bank B account',
           },
           {
             id: 'fm_3_2_3',
@@ -447,7 +447,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 2,
             timestamp: '13:15:00',
             title: 'Interbank Payment Settlement',
-            description: 'Individual transfers $20B from Bank A to Bank B.',
+            description: 'Individual transfers $20 from Bank A to Bank B.',
             entries: [
               { entityId: 'bank_a', accountName: 'Individual Deposits', type: 'debit', amount: 20, category: 'liability' },
               { entityId: 'bank_a', accountName: 'Reserves at Central Bank', type: 'credit', amount: 20, category: 'asset' },
@@ -462,14 +462,14 @@ export const scenarios: Scenario[] = [
 
       {
         stepNumber: 3,
-        title: 'Step 3: Individual Repays $10B Existing Loan at Bank B',
+        title: 'Step 3: Individual Repays $10 Existing Loan at Bank B',
         subtitle: 'Loan Principal Repayment Destroys Money',
-        description: 'Individual uses $10B of deposit balance at Bank B to pay down mortgage principal owed to Bank B.',
-        accountingExplanation: 'Individual Assets (Bank B Deposit) -$10B; Individual Liabilities (Bank Loans) -$10B. Bank B Liabilities (Customer Deposit) -$10B; Bank B Assets (Commercial Loans) -$10B.',
+        description: 'Individual uses $10 of deposit balance at Bank B to pay down mortgage principal owed to Bank B.',
+        accountingExplanation: 'Individual Assets (Bank B Deposit) -$10; Individual Liabilities (Bank Loans) -$10. Bank B Liabilities (Customer Deposit) -$10; Bank B Assets (Commercial Loans) -$10.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B)',
-          m1Change: '-$10B ($1,380B)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: '-$10 ($1,380)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'Just as lending creates money, paying off bank loans DESTROYS broad money (M1)! The commercial banking system constantly expands and contracts money via credit cycles.',
         },
         entityDeltas: {
@@ -493,7 +493,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_b',
             assetType: 'Deposit Principal Repayment',
             amount: 10,
-            description: 'Individual extinguishes $10B debt liability against $10B deposit balance',
+            description: 'Individual extinguishes $10 debt liability against $10 deposit balance',
           },
         ],
         journalEntries: [
@@ -502,7 +502,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 3,
             timestamp: '16:00:00',
             title: 'Loan Principal Debt Extinction',
-            description: 'Individual repays $10B principal loan to Bank B.',
+            description: 'Individual repays $10 principal loan to Bank B.',
             entries: [
               { entityId: 'individual', accountName: 'Bank Loans & Mortgages', type: 'debit', amount: 10, category: 'liability' },
               { entityId: 'individual', accountName: 'Bank B Deposits', type: 'credit', amount: 10, category: 'asset' },
@@ -526,14 +526,14 @@ export const scenarios: Scenario[] = [
     steps: [
       {
         stepNumber: 1,
-        title: 'Step 1: $30B of Fed Treasuries Mature (Roll-Off)',
+        title: 'Step 1: $30 of Fed Treasuries Mature (Roll-Off)',
         subtitle: 'SOMA Maturity without Reinvestment',
-        description: '$30B of Treasuries held by the Fed reach maturity. Treasury pays off the Fed using its TGA balance.',
-        accountingExplanation: 'Fed Assets (Treasuries) -$30B; Fed Liabilities (TGA) -$30B. Treasury Assets (TGA) -$30B; Treasury Liabilities (Debt Issued) -$30B.',
+        description: '$30 of Treasuries held by the Fed reach maturity. Treasury pays off the Fed using its TGA balance.',
+        accountingExplanation: 'Fed Assets (Treasuries) -$30; Fed Liabilities (TGA) -$30. Treasury Assets (TGA) -$30; Treasury Liabilities (Debt Issued) -$30.',
         macroImpact: {
-          m0Change: '-$30B ($1,070B Fed size)',
-          m1Change: 'Unchanged ($1,350B)',
-          tgaChange: '-$30B ($170B)',
+          m0Change: '-$30 ($1,070 Fed size)',
+          m1Change: 'Unchanged ($1,350)',
+          tgaChange: '-$30 ($170)',
           keyTakeaway: 'When the Fed lets bonds roll off, both Fed assets and TGA liabilities shrink. Broad money is not yet affected in this step.',
         },
         entityDeltas: {
@@ -557,7 +557,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'central_bank',
             assetType: 'TGA Redemption Payment',
             amount: 30,
-            description: 'Treasury pays $30B TGA cash to extinguish maturing SOMA bond',
+            description: 'Treasury pays $30 TGA cash to extinguish maturing SOMA bond',
           },
         ],
         journalEntries: [
@@ -566,7 +566,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 1,
             timestamp: '09:00:00',
             title: 'SOMA Debt Redemption at Maturity',
-            description: 'Treasury redeems $30B maturing bonds held by Fed using TGA cash.',
+            description: 'Treasury redeems $30 maturing bonds held by Fed using TGA cash.',
             entries: [
               { entityId: 'central_bank', accountName: 'Treasury General Account (TGA)', type: 'debit', amount: 30, category: 'liability' },
               { entityId: 'central_bank', accountName: 'US Treasuries (SOMA)', type: 'credit', amount: 30, category: 'asset' },
@@ -579,15 +579,15 @@ export const scenarios: Scenario[] = [
 
       {
         stepNumber: 2,
-        title: 'Step 2: Treasury Refinances by Selling $30B Bonds to Pension Fund',
+        title: 'Step 2: Treasury Refinances by Selling $30 Bonds to Pension Fund',
         subtitle: 'Refinancing Maturing Debt in Private Markets',
-        description: 'To replenish its TGA cash, Treasury issues $30B of replacement bonds, which are purchased by the Pension Fund via Bank A.',
-        accountingExplanation: 'Pension Fund swaps $30B Bank Deposit (Asset) for $30B Treasuries (Asset). Bank A loses $30B Deposit Liability and $30B Fed Reserves. Fed shifts $30B from Bank A Reserves to TGA. Treasury gets $30B TGA cash.',
+        description: 'To replenish its TGA cash, Treasury issues $30 of replacement bonds, which are purchased by the Pension Fund via Bank A.',
+        accountingExplanation: 'Pension Fund swaps $30 Bank Deposit (Asset) for $30 Treasuries (Asset). Bank A loses $30 Deposit Liability and $30 Fed Reserves. Fed shifts $30 from Bank A Reserves to TGA. Treasury gets $30 TGA cash.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,070B)',
-          m1Change: '-$30B ($1,320B)',
-          tgaChange: '+$30B (Back to $200B)',
-          keyTakeaway: 'The full QT cycle (Fed roll-off + private market debt refinancing) DRAINS $30B of Broad Money (M1) and $30B of Bank Reserves!',
+          m0Change: 'Unchanged ($1,070)',
+          m1Change: '-$30 ($1,320)',
+          tgaChange: '+$30 (Back to $200)',
+          keyTakeaway: 'The full QT cycle (Fed roll-off + private market debt refinancing) DRAINS $30 of Broad Money (M1) and $30 of Bank Reserves!',
         },
         entityDeltas: {
           pension_fund: {
@@ -614,7 +614,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_a',
             assetType: 'Bank Deposit',
             amount: 30,
-            description: 'Pension Fund uses $30B bank deposits to purchase new Treasury bond',
+            description: 'Pension Fund uses $30 bank deposits to purchase new Treasury bond',
           },
           {
             id: 'fm_4_2_2',
@@ -622,7 +622,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'central_bank',
             assetType: 'Reserves Transfer',
             amount: 30,
-            description: 'Bank A transfers $30B reserves to Fed TGA',
+            description: 'Bank A transfers $30 reserves to Fed TGA',
           },
           {
             id: 'fm_4_2_3',
@@ -630,7 +630,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'treasury',
             assetType: 'TGA Deposit',
             amount: 30,
-            description: 'Fed credits $30B to Treasury General Account',
+            description: 'Fed credits $30 to Treasury General Account',
           },
         ],
         journalEntries: [
@@ -639,7 +639,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 2,
             timestamp: '11:30:00',
             title: 'Treasury Refinancing Auction Purchase by Non-Bank',
-            description: 'Pension Fund buys $30B new bonds, draining $30B reserves and $30B deposits.',
+            description: 'Pension Fund buys $30 new bonds, draining $30 reserves and $30 deposits.',
             entries: [
               { entityId: 'pension_fund', accountName: 'US Treasuries', type: 'debit', amount: 30, category: 'asset' },
               { entityId: 'pension_fund', accountName: 'Bank Deposits (at Bank A)', type: 'credit', amount: 30, category: 'asset' },
@@ -657,24 +657,24 @@ export const scenarios: Scenario[] = [
   },
 
   {
-    id: 'cash-drain-and-rrp',
-    title: '5. Reverse Repo (ON RRP) & Physical Cash Drain',
+    id: 'physical-cash-drain',
+    title: '5. Physical Cash Drain',
     category: 'Liquidity & Cash',
     difficulty: 'Intermediate',
-    description: 'Observe how overnight liquidity facilities like Reverse Repo (ON RRP) and physical cash withdrawals shift central bank liability composition.',
-    realWorldContext: 'Central Bank liabilities consist of Bank Reserves, TGA, Reverse Repo (ON RRP), and Physical Cash. Money constantly shifts between these 4 buckets depending on market incentives.',
+    description: 'Observe how physical paper cash withdrawals convert digital commercial bank deposits into central bank paper currency liabilities, draining bank reserves.',
+    realWorldContext: 'Central Bank liabilities consist of Bank Reserves, TGA, Reverse Repo (ON RRP), and Physical Cash. Withdrawing paper currency shifts central bank liabilities from bank reserves into physical cash notes.',
     initialState: createDefaultInitialState(),
     steps: [
       {
         stepNumber: 1,
-        title: 'Step 1: Private Individual Withdraws $15B Physical Cash from Bank B',
+        title: 'Step 1: Private Individual Withdraws $15 Physical Cash from Bank B',
         subtitle: 'Commercial Bank Reserve to Physical Cash Conversion',
-        description: 'Private Individual withdraws $15B in physical paper currency notes from Bank B checking account.',
-        accountingExplanation: 'Individual Assets: Bank B Deposit -$15B, Physical Currency Notes +$15B. Bank B Liabilities: Customer Deposit -$15B, Bank B Assets: Reserves at Fed -$15B. Fed Liabilities: Bank B Reserves -$15B, Currency Notes +$15B.',
+        description: 'Private Individual withdraws $15 in physical paper currency notes from Bank B checking account.',
+        accountingExplanation: 'Individual Assets: Bank B Deposit -$15, Physical Currency Notes +$15. Bank B Liabilities: Customer Deposit -$15, Bank B Assets: Reserves at Fed -$15. Fed Liabilities: Bank B Reserves -$15, Currency Notes +$15.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B - liability composition shift)',
-          m1Change: '-$15B in bank deposits (+$15B physical cash)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: 'Unchanged ($1,100 - liability composition shift)',
+          m1Change: '-$15 in bank deposits (+$15 physical cash)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'Withdrawing cash converts digital commercial bank deposits into physical central bank liabilities (paper notes). It reduces bank reserves at the Fed!',
         },
         entityDeltas: {
@@ -699,7 +699,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_b',
             assetType: 'Physical Cash Vault Delivery',
             amount: 15,
-            description: 'Fed delivers $15B physical cash notes to Bank B vault, debiting Bank B reserves',
+            description: 'Fed delivers $15 physical cash notes to Bank B vault, debiting Bank B reserves',
           },
           {
             id: 'fm_5_1_2',
@@ -707,7 +707,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'individual',
             assetType: 'Paper Currency',
             amount: 15,
-            description: 'Bank B hands over $15B physical cash notes to Individual',
+            description: 'Bank B hands over $15 physical cash notes to Individual',
           },
         ],
         journalEntries: [
@@ -716,7 +716,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 1,
             timestamp: '10:00:00',
             title: 'Physical Cash Withdrawal',
-            description: 'Individual converts $15B deposit to cash notes.',
+            description: 'Individual converts $15 deposit to cash notes.',
             entries: [
               { entityId: 'individual', accountName: 'Physical Currency Notes', type: 'debit', amount: 15, category: 'asset' },
               { entityId: 'individual', accountName: 'Bank B Deposits', type: 'credit', amount: 15, category: 'asset' },
@@ -732,8 +732,146 @@ export const scenarios: Scenario[] = [
   },
 
   {
+    id: 'central-bank-reverse-repo',
+    title: '6. Central Bank Overnight Reverse Repo Facility (ON RRP)',
+    category: 'Liquidity & Cash',
+    difficulty: 'Intermediate',
+    description: 'Examine how the Central Bank ON RRP facility operates directly with non-bank institutional investors like Pension Funds / Money Market Funds, draining reserves and broad deposits into overnight central bank liabilities.',
+    realWorldContext: 'The Fed’s ON RRP facility allows eligible non-bank counterparties (pension funds, MMFs) to park cash directly at the Central Bank overnight. In exchange, the Central Bank temporarily provides collateral, absorbing commercial bank reserves and non-bank broad deposits.',
+    initialState: createDefaultInitialState(),
+    steps: [
+      {
+        stepNumber: 1,
+        title: 'Step 1: Pension Fund Parks $50 Cash in Central Bank ON RRP Facility',
+        subtitle: 'Non-Bank Cash Deposition into Central Bank ON RRP Facility',
+        description: 'Pension Fund transfers $50 from its commercial bank account at Bank A directly into the Central Bank ON RRP facility.',
+        accountingExplanation: 'Pension Fund: Bank Deposits (at Bank A) -$50, ON RRP Facility Deposit (at Central Bank) +$50. Commercial Bank A: Pension Fund Deposits -$50, Reserves at Central Bank -$50. Central Bank: Bank A Reserves -$50, Overnight Reverse Repo Facility (ON RRP) +$50.',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100 - reserve to ON RRP liability shift)',
+          m1Change: '-$50 ($1,300 broad money contraction)',
+          tgaChange: 'Unchanged ($200)',
+          keyTakeaway: 'When non-bank institutions park money directly in the Central Bank ON RRP facility, commercial bank reserves AND broad bank deposits shrink simultaneously!',
+        },
+        entityDeltas: {
+          pension_fund: {
+            assets: { pf_bank_dep: -50, pf_rrp_asset: 50 },
+          },
+          bank_a: {
+            assets: { ba_reserves: -50 },
+            liabilities: { ba_dep_pension: -50 },
+          },
+          central_bank: {
+            liabilities: { cb_reserves_bank_a: -50, cb_rrp_facility: 50 },
+          },
+          bank_b: {},
+          treasury: {},
+          individual: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_6_rrp_1_1',
+            fromEntity: 'pension_fund',
+            toEntity: 'bank_a',
+            assetType: 'Bank Deposit Shift',
+            amount: 50,
+            description: 'Pension Fund withdraws $50 commercial deposit to park in ON RRP',
+          },
+          {
+            id: 'fm_6_rrp_1_2',
+            fromEntity: 'bank_a',
+            toEntity: 'central_bank',
+            assetType: 'Reserve Transfer',
+            amount: 50,
+            description: 'Bank A transfers $50 reserves to Fed ON RRP Facility',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j6_rrp_1',
+            stepNumber: 1,
+            timestamp: '16:00:00',
+            title: 'ON RRP Non-Bank Cash Placement',
+            description: 'Pension Fund places $50 into Central Bank ON RRP facility.',
+            entries: [
+              { entityId: 'pension_fund', accountName: 'ON RRP Deposits at Central Bank', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'pension_fund', accountName: 'Bank Deposits (at Bank A)', type: 'credit', amount: 50, category: 'asset' },
+              { entityId: 'bank_a', accountName: 'Pension Fund Deposits', type: 'debit', amount: 50, category: 'liability' },
+              { entityId: 'bank_a', accountName: 'Reserves at Central Bank', type: 'credit', amount: 50, category: 'asset' },
+              { entityId: 'central_bank', accountName: 'Bank A Reserves', type: 'debit', amount: 50, category: 'liability' },
+              { entityId: 'central_bank', accountName: 'Overnight Reverse Repo Facility (ON RRP)', type: 'credit', amount: 50, category: 'liability' },
+            ],
+          },
+        ],
+      },
+      {
+        stepNumber: 2,
+        title: 'Step 2: ON RRP Facility Unwinds (Matures Overnight)',
+        subtitle: 'Overnight Reverse Repo Maturity & Deposit Restoration',
+        description: 'The ON RRP facility unwinds overnight. The Central Bank returns $50 cash to Bank A reserves, and Bank A credits Pension Fund deposit account.',
+        accountingExplanation: 'Central Bank: ON RRP Facility -$50, Bank A Reserves +$50. Commercial Bank A: Reserves at Central Bank +$50, Pension Fund Deposits +$50. Pension Fund: ON RRP Facility Deposit -$50, Bank Deposits +$50.',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: '+$50 ($1,350 restored)',
+          tgaChange: 'Unchanged ($200)',
+          keyTakeaway: 'The ON RRP facility acts as a flexible liquidity sponge that absorbs non-bank cash overnight and restores bank deposits upon maturity.',
+        },
+        entityDeltas: {
+          central_bank: {
+            liabilities: { cb_rrp_facility: -50, cb_reserves_bank_a: 50 },
+          },
+          bank_a: {
+            assets: { ba_reserves: 50 },
+            liabilities: { ba_dep_pension: 50 },
+          },
+          pension_fund: {
+            assets: { pf_rrp_asset: -50, pf_bank_dep: 50 },
+          },
+          bank_b: {},
+          treasury: {},
+          individual: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_6_rrp_2_1',
+            fromEntity: 'central_bank',
+            toEntity: 'bank_a',
+            assetType: 'Reserve Return',
+            amount: 50,
+            description: 'Central Bank returns $50 reserves to Bank A as ON RRP matures',
+          },
+          {
+            id: 'fm_6_rrp_2_2',
+            fromEntity: 'bank_a',
+            toEntity: 'pension_fund',
+            assetType: 'Deposit Restoration',
+            amount: 50,
+            description: 'Bank A restores $50 commercial deposit to Pension Fund',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j6_rrp_2',
+            stepNumber: 2,
+            timestamp: '08:30:00',
+            title: 'ON RRP Facility Maturity & Settlement',
+            description: 'ON RRP matures, returning $50 to reserves and broad deposits.',
+            entries: [
+              { entityId: 'central_bank', accountName: 'Overnight Reverse Repo Facility (ON RRP)', type: 'debit', amount: 50, category: 'liability' },
+              { entityId: 'central_bank', accountName: 'Bank A Reserves', type: 'credit', amount: 50, category: 'liability' },
+              { entityId: 'bank_a', accountName: 'Reserves at Central Bank', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'bank_a', accountName: 'Pension Fund Deposits', type: 'credit', amount: 50, category: 'liability' },
+              { entityId: 'pension_fund', accountName: 'Bank Deposits (at Bank A)', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'pension_fund', accountName: 'ON RRP Deposits at Central Bank', type: 'credit', amount: 50, category: 'asset' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: 'government-interest-payments',
-    title: '6. Government Interest Payments: Bank vs. Non-Bank Debt Holders',
+    title: '7. Government Interest Payments: Bank vs. Non-Bank Debt Holders',
     category: 'Fiscal & Debt',
     difficulty: 'Intermediate',
     description: 'Analyze what happens to broad money supply and bank reserves when the US Treasury pays interest on government debt held directly by a Commercial Bank versus held by a Non-Bank Pension Fund.',
@@ -742,14 +880,14 @@ export const scenarios: Scenario[] = [
     steps: [
       {
         stepNumber: 1,
-        title: 'Step 1: Treasury Pays $10B Interest on Debt Held by Commercial Bank A',
+        title: 'Step 1: Treasury Pays $10 Interest on Debt Held by Commercial Bank A',
         subtitle: 'Government Debt Interest Paid to a Commercial Bank',
-        description: 'The Treasury pays $10B of interest to Commercial Bank A on the Treasury securities Bank A holds on its balance sheet.',
-        accountingExplanation: 'Treasury TGA cash -$10B; Treasury Net Fiscal Equity -$10B. Fed shifts $10B from TGA to Bank A Reserves. Bank A gets +$10B Reserves (Asset) and +$10B Bank Equity/Income (Equity).',
+        description: 'The Treasury pays $10 of interest to Commercial Bank A on the Treasury securities Bank A holds on its balance sheet.',
+        accountingExplanation: 'Treasury TGA cash -$10; Treasury Net Fiscal Equity -$10. Fed shifts $10 from TGA to Bank A Reserves. Bank A gets +$10 Reserves (Asset) and +$10 Bank Equity/Income (Equity).',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B - shift from TGA to Reserves)',
-          m1Change: 'Unchanged ($1,350B)',
-          tgaChange: '-$10B ($190B)',
+          m0Change: 'Unchanged ($1,100 - shift from TGA to Reserves)',
+          m1Change: 'Unchanged ($1,350)',
+          tgaChange: '-$10 ($190)',
           keyTakeaway: 'Interest paid directly to commercial banks increases bank reserves and bank equity, but DOES NOT create broad money (M1) because no customer deposit accounts were credited.',
         },
         entityDeltas: {
@@ -775,7 +913,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'central_bank',
             assetType: 'TGA Cash Release',
             amount: 10,
-            description: 'Treasury authorizes $10B interest outlay from TGA account',
+            description: 'Treasury authorizes $10 interest outlay from TGA account',
           },
           {
             id: 'fm_6_1_2',
@@ -783,7 +921,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_a',
             assetType: 'Reserves Credit',
             amount: 10,
-            description: 'Fed credits $10B Reserves to Bank A account',
+            description: 'Fed credits $10 Reserves to Bank A account',
           },
         ],
         journalEntries: [
@@ -792,7 +930,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 1,
             timestamp: '09:00:00',
             title: 'Sovereign Debt Interest Payment to Commercial Bank',
-            description: 'Treasury pays $10B interest on bond holdings to Bank A.',
+            description: 'Treasury pays $10 interest on bond holdings to Bank A.',
             entries: [
               { entityId: 'treasury', accountName: 'Sovereign Fiscal Deficit', type: 'debit', amount: 10, category: 'equity' },
               { entityId: 'treasury', accountName: 'TGA Cash (at Central Bank)', type: 'credit', amount: 10, category: 'asset' },
@@ -807,14 +945,14 @@ export const scenarios: Scenario[] = [
 
       {
         stepNumber: 2,
-        title: 'Step 2: Treasury Pays $10B Interest on Debt Held by Pension Fund (Non-Bank)',
+        title: 'Step 2: Treasury Pays $10 Interest on Debt Held by Pension Fund (Non-Bank)',
         subtitle: 'Government Debt Interest Paid to a Non-Bank Financial Institution',
-        description: 'The Treasury pays $10B of interest on Treasuries owned by the Pension Fund. Payment clears through Bank A into Pension Fund’s bank account.',
-        accountingExplanation: 'Treasury TGA cash -$10B; Treasury Net Fiscal Equity -$10B. Fed shifts $10B from TGA to Bank A Reserves. Bank A gets +$10B Reserves (Asset) and +$10B Deposit Liability to Pension Fund. Pension Fund gets +$10B Bank Deposit (Asset) and +$10B Fund Equity (Equity).',
+        description: 'The Treasury pays $10 of interest on Treasuries owned by the Pension Fund. Payment clears through Bank A into Pension Fund’s bank account.',
+        accountingExplanation: 'Treasury TGA cash -$10; Treasury Net Fiscal Equity -$10. Fed shifts $10 from TGA to Bank A Reserves. Bank A gets +$10 Reserves (Asset) and +$10 Deposit Liability to Pension Fund. Pension Fund gets +$10 Bank Deposit (Asset) and +$10 Fund Equity (Equity).',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B)',
-          m1Change: '+$10B ($1,360B)',
-          tgaChange: '-$10B ($180B)',
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: '+$10 ($1,360)',
+          tgaChange: '-$10 ($180)',
           keyTakeaway: 'Interest paid to non-bank bondholders CREATES NEW BROAD MONEY (M1)! Commercial bank deposits expand directly on both sides.',
         },
         entityDeltas: {
@@ -843,7 +981,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'central_bank',
             assetType: 'TGA Cash Release',
             amount: 10,
-            description: 'Treasury releases $10B TGA cash for non-bank interest payout',
+            description: 'Treasury releases $10 TGA cash for non-bank interest payout',
           },
           {
             id: 'fm_6_2_2',
@@ -851,7 +989,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_a',
             assetType: 'Reserves Credit',
             amount: 10,
-            description: 'Fed credits $10B reserves to clearing Bank A',
+            description: 'Fed credits $10 reserves to clearing Bank A',
           },
           {
             id: 'fm_6_2_3',
@@ -859,7 +997,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'pension_fund',
             assetType: 'Deposit Credit',
             amount: 10,
-            description: 'Bank A credits $10B commercial deposit to Pension Fund',
+            description: 'Bank A credits $10 commercial deposit to Pension Fund',
           },
         ],
         journalEntries: [
@@ -868,7 +1006,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 2,
             timestamp: '11:00:00',
             title: 'Sovereign Interest Payment to Non-Bank Bondholder',
-            description: 'Treasury pays $10B interest to Pension Fund, expanding broad money.',
+            description: 'Treasury pays $10 interest to Pension Fund, expanding broad money.',
             entries: [
               { entityId: 'treasury', accountName: 'Sovereign Fiscal Deficit', type: 'debit', amount: 10, category: 'equity' },
               { entityId: 'treasury', accountName: 'TGA Cash (at Central Bank)', type: 'credit', amount: 10, category: 'asset' },
@@ -887,7 +1025,7 @@ export const scenarios: Scenario[] = [
 
   {
     id: 'taxation-and-loan-servicing',
-    title: '7. Taxation & Loan Servicing: Taxes, Loan Interest & Debt Extinction',
+    title: '8. Taxation & Loan Servicing: Taxes, Loan Interest & Debt Extinction',
     category: 'Commercial Credit',
     difficulty: 'Intermediate',
     description: 'Understand how private sector payments contract the money supply: paying taxes drains deposits into the TGA, paying loan interest converts private wealth into bank profits, and paying loan principal extinguishes broad money.',
@@ -896,14 +1034,14 @@ export const scenarios: Scenario[] = [
     steps: [
       {
         stepNumber: 1,
-        title: 'Step 1: Private Individual Pays $20B Income Taxes to Treasury',
+        title: 'Step 1: Private Individual Pays $20 Income Taxes to Treasury',
         subtitle: 'Taxation Drains Commercial Deposits & Bank Reserves',
-        description: 'Private Individual pays $20B in federal taxes from their Bank A checking account to the US Treasury.',
-        accountingExplanation: 'Individual Bank A Deposit -$20B; Individual Net Worth -$20B. Bank A Deposit Liability -$20B; Bank A Reserves -$20B. Fed shifts $20B from Bank A Reserves to TGA. Treasury TGA Cash +$20B; Sovereign Fiscal Balance +$20B.',
+        description: 'Private Individual pays $20 in federal taxes from their Bank A checking account to the US Treasury.',
+        accountingExplanation: 'Individual Bank A Deposit -$20; Individual Net Worth -$20. Bank A Deposit Liability -$20; Bank A Reserves -$20. Fed shifts $20 from Bank A Reserves to TGA. Treasury TGA Cash +$20; Sovereign Fiscal Balance +$20.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B - shift from Reserves to TGA)',
-          m1Change: '-$20B ($1,330B)',
-          tgaChange: '+$20B ($220B)',
+          m0Change: 'Unchanged ($1,100 - shift from Reserves to TGA)',
+          m1Change: '-$20 ($1,330)',
+          tgaChange: '+$20 ($220)',
           keyTakeaway: 'Taxation DRAINS broad money (M1) and shrinks bank reserves at the Fed! The TGA balance increases.',
         },
         entityDeltas: {
@@ -932,7 +1070,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_a',
             assetType: 'Deposit Tax Debit',
             amount: 20,
-            description: 'Individual account debited $20B for tax payment',
+            description: 'Individual account debited $20 for tax payment',
           },
           {
             id: 'fm_7_1_2',
@@ -940,7 +1078,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'central_bank',
             assetType: 'Reserves Transfer',
             amount: 20,
-            description: 'Bank A transfers $20B reserves to Fed TGA',
+            description: 'Bank A transfers $20 reserves to Fed TGA',
           },
           {
             id: 'fm_7_1_3',
@@ -948,7 +1086,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'treasury',
             assetType: 'TGA Deposit Credit',
             amount: 20,
-            description: 'Fed credits $20B to Treasury General Account',
+            description: 'Fed credits $20 to Treasury General Account',
           },
         ],
         journalEntries: [
@@ -957,7 +1095,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 1,
             timestamp: '09:30:00',
             title: 'Private Tax Collection Settlement',
-            description: 'Individual pays $20B taxes to Treasury, draining reserves and deposits.',
+            description: 'Individual pays $20 taxes to Treasury, draining reserves and deposits.',
             entries: [
               { entityId: 'individual', accountName: 'Household Net Worth', type: 'debit', amount: 20, category: 'equity' },
               { entityId: 'individual', accountName: 'Bank A Deposits', type: 'credit', amount: 20, category: 'asset' },
@@ -974,14 +1112,14 @@ export const scenarios: Scenario[] = [
 
       {
         stepNumber: 2,
-        title: 'Step 2: Individual Pays $5B Interest on Bank Loan to Bank A',
+        title: 'Step 2: Individual Pays $5 Interest on Bank Loan to Bank A',
         subtitle: 'Loan Interest Servicing Transfers Wealth to Bank Equity',
-        description: 'Individual pays $5B interest expense on an existing mortgage/loan to Bank A using their checking deposit balance.',
-        accountingExplanation: 'Individual Bank A Deposit -$5B; Household Net Worth -$5B. Bank A Deposit Liability -$5B; Bank Equity Capital +$5B.',
+        description: 'Individual pays $5 interest expense on an existing mortgage/loan to Bank A using their checking deposit balance.',
+        accountingExplanation: 'Individual Bank A Deposit -$5; Household Net Worth -$5. Bank A Deposit Liability -$5; Bank Equity Capital +$5.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B)',
-          m1Change: '-$5B ($1,325B)',
-          tgaChange: 'Unchanged ($220B)',
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: '-$5 ($1,325)',
+          tgaChange: 'Unchanged ($220)',
           keyTakeaway: 'Loan interest payments reduce broad deposit money M1 and shift wealth into bank equity profits. No bank reserves move.',
         },
         entityDeltas: {
@@ -1005,7 +1143,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_a',
             assetType: 'Interest Payment Deposit Transfer',
             amount: 5,
-            description: 'Individual transfers $5B deposit to Bank A as interest income',
+            description: 'Individual transfers $5 deposit to Bank A as interest income',
           },
         ],
         journalEntries: [
@@ -1014,7 +1152,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 2,
             timestamp: '13:00:00',
             title: 'Bank Loan Interest Servicing',
-            description: 'Individual pays $5B interest to Bank A from checking deposits.',
+            description: 'Individual pays $5 interest to Bank A from checking deposits.',
             entries: [
               { entityId: 'individual', accountName: 'Household Net Worth', type: 'debit', amount: 5, category: 'equity' },
               { entityId: 'individual', accountName: 'Bank A Deposits', type: 'credit', amount: 5, category: 'asset' },
@@ -1027,14 +1165,14 @@ export const scenarios: Scenario[] = [
 
       {
         stepNumber: 3,
-        title: 'Step 3: Individual Repays $15B Mortgage Loan Principal to Bank A',
+        title: 'Step 3: Individual Repays $15 Mortgage Loan Principal to Bank A',
         subtitle: 'Loan Principal Debt Extinction (Money Destruction)',
-        description: 'Individual repays $15B of principal on a bank loan owed to Bank A using their deposit account balance.',
-        accountingExplanation: 'Individual Bank A Deposit -$15B; Bank Loans Liability -$15B. Bank A Deposit Liability -$15B; Commercial Loans Asset -$15B.',
+        description: 'Individual repays $15 of principal on a bank loan owed to Bank A using their deposit account balance.',
+        accountingExplanation: 'Individual Bank A Deposit -$15; Bank Loans Liability -$15. Bank A Deposit Liability -$15; Commercial Loans Asset -$15.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B)',
-          m1Change: '-$15B ($1,310B)',
-          tgaChange: 'Unchanged ($220B)',
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: '-$15 ($1,310)',
+          tgaChange: 'Unchanged ($220)',
           keyTakeaway: 'Repaying loan principal DESTROYS broad money (M1)! The bank deposit and the loan asset vanish simultaneously from both balance sheets.',
         },
         entityDeltas: {
@@ -1058,7 +1196,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'bank_a',
             assetType: 'Loan Principal Repayment',
             amount: 15,
-            description: 'Individual pays off $15B principal loan liability against deposit balance',
+            description: 'Individual pays off $15 principal loan liability against deposit balance',
           },
         ],
         journalEntries: [
@@ -1067,7 +1205,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 3,
             timestamp: '15:30:00',
             title: 'Loan Principal Debt Extinction',
-            description: 'Individual repays $15B loan principal, destroying $15B deposits and loan assets.',
+            description: 'Individual repays $15 loan principal, destroying $15 deposits and loan assets.',
             entries: [
               { entityId: 'individual', accountName: 'Bank Loans & Mortgages', type: 'debit', amount: 15, category: 'liability' },
               { entityId: 'individual', accountName: 'Bank A Deposits', type: 'credit', amount: 15, category: 'asset' },
@@ -1082,22 +1220,23 @@ export const scenarios: Scenario[] = [
 
   {
     id: 'corporate-bond-issuance',
-    title: '8. Corporate Bond Issuance & Business Capital Outlay',
+    title: '9. Corporate Bond Issuance & Business Capital Outlay',
     category: 'Advanced Mechanics',
+    difficulty: 'Advanced',
     description: 'Observe the step-by-step T-account mechanics when a Private Corporation issues corporate debt/bonds directly to Pension Funds and uses deposit proceeds for worker payroll and capex.',
     realWorldContext: 'Corporate bond markets allow companies to borrow directly from institutional investors like Pension Funds. The transaction transfers commercial bank deposits from investors to the corporation.',
     initialState: createDefaultInitialState(),
     steps: [
       {
         stepNumber: 1,
-        title: 'Step 1: Private Corporation Issues $50B Corporate Bonds to Pension Fund',
+        title: 'Step 1: Private Corporation Issues $50 Corporate Bonds to Pension Fund',
         subtitle: 'Institutional Debt Financing via Bank Deposit Transfer',
-        description: 'Private Corporation issues $50B in corporate bonds. Pension Fund purchases the bonds using $50B of its bank deposits held at Bank A.',
-        accountingExplanation: 'Corporation increases Corporate Bonds Issued (Liability) by $50B and receives $50B Bank Deposits (Asset) at Bank A. Pension Fund swaps $50B Bank Deposit (Asset) for $50B Corporate Bonds (Asset). On Bank A liabilities, $50B shifts from Pension Fund Deposit to Corporation Deposit.',
+        description: 'Private Corporation issues $50 in corporate bonds. Pension Fund purchases the bonds using $50 of its bank deposits held at Bank A.',
+        accountingExplanation: 'Corporation increases Corporate Bonds Issued (Liability) by $50 and receives $50 Bank Deposits (Asset) at Bank A. Pension Fund swaps $50 Bank Deposit (Asset) for $50 Corporate Bonds (Asset). On Bank A liabilities, $50 shifts from Pension Fund Deposit to Corporation Deposit.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B)',
-          m1Change: 'Unchanged ($1,350B - shift from institutional deposit to corporate deposit)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: 'Unchanged ($1,350 - shift from institutional deposit to corporate deposit)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'Corporate bond sales do not create new deposits (unlike bank loan origination); instead, they reallocate existing broad money (M1) from investors to corporate bank accounts.',
         },
         entityDeltas: {
@@ -1124,7 +1263,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'corporation',
             assetType: 'Commercial Bank Deposit',
             amount: 50,
-            description: 'Pension Fund transfers $50B deposit to Private Corporation for new corporate bond issuance',
+            description: 'Pension Fund transfers $50 deposit to Private Corporation for new corporate bond issuance',
           },
         ],
         journalEntries: [
@@ -1133,7 +1272,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 1,
             timestamp: '09:00:00',
             title: 'Corporate Bond Primary Issuance',
-            description: 'Corporation issues $50B bonds purchased by Pension Fund using Bank A deposits.',
+            description: 'Corporation issues $50 bonds purchased by Pension Fund using Bank A deposits.',
             entries: [
               { entityId: 'corporation', accountName: 'Bank Deposits (at Bank A)', type: 'debit', amount: 50, category: 'asset' },
               { entityId: 'corporation', accountName: 'Corporate Bonds Issued', type: 'credit', amount: 50, category: 'liability' },
@@ -1147,14 +1286,14 @@ export const scenarios: Scenario[] = [
       },
       {
         stepNumber: 2,
-        title: 'Step 2: Private Corporation Spends $30B Deposit on Payroll & Equipment',
+        title: 'Step 2: Private Corporation Spends $30 Deposit on Payroll & Equipment',
         subtitle: 'Corporate Capital Outlays & Retail Deposit Reallocation',
-        description: 'Private Corporation spends $30B of deposit funds to pay Private Individual workers and suppliers at Bank B.',
-        accountingExplanation: 'Corporation Bank A Deposit -$30B; Property/Equipment Asset +$30B. Bank A loses $30B Deposit Liability and $30B Reserves at Fed. Fed shifts $30B Reserves from Bank A to Bank B. Bank B gets $30B Reserves and credits Individual Deposit +$30B. Individual Assets (Bank B Deposit) +$30B, Equity (Net Worth) +$30B.',
+        description: 'Private Corporation spends $30 of deposit funds to pay Private Individual workers and suppliers at Bank B.',
+        accountingExplanation: 'Corporation Bank A Deposit -$30; Property/Equipment Asset +$30. Bank A loses $30 Deposit Liability and $30 Reserves at Fed. Fed shifts $30 Reserves from Bank A to Bank B. Bank B gets $30 Reserves and credits Individual Deposit +$30. Individual Assets (Bank B Deposit) +$30, Equity (Net Worth) +$30.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B)',
-          m1Change: 'Unchanged ($1,350B)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: 'Unchanged ($1,350)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'Capital spending transfers corporate liquidity into household deposit accounts, driving velocity of broad money M1 without changing total base money.',
         },
         entityDeltas: {
@@ -1187,7 +1326,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'individual',
             assetType: 'Payroll & Capex Deposit Transfer',
             amount: 30,
-            description: 'Corporation pays $30B to Individual workers & suppliers at Bank B',
+            description: 'Corporation pays $30 to Individual workers & suppliers at Bank B',
           },
         ],
         journalEntries: [
@@ -1196,7 +1335,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 2,
             timestamp: '14:30:00',
             title: 'Corporate Capital & Payroll Expenditure',
-            description: 'Corporation transfers $30B from Bank A to Individual account at Bank B.',
+            description: 'Corporation transfers $30 from Bank A to Individual account at Bank B.',
             entries: [
               { entityId: 'corporation', accountName: 'Property, Plant & Equipment', type: 'debit', amount: 30, category: 'asset' },
               { entityId: 'corporation', accountName: 'Bank Deposits (at Bank A)', type: 'credit', amount: 30, category: 'asset' },
@@ -1217,22 +1356,23 @@ export const scenarios: Scenario[] = [
 
   {
     id: 'hedge-fund-repo-treasury',
-    title: '9. Hedge Fund Repo Leverage & Secondary Treasury Arbitrage',
+    title: '10. Hedge Fund Repo Leverage & Secondary Treasury Arbitrage',
     category: 'Advanced Mechanics',
+    difficulty: 'Advanced',
     description: 'Examine how a Global Macro Hedge Fund enters into a Repo agreement with Bank A to obtain deposit leverage, then uses that leverage to purchase Treasuries from the Pension Fund on the secondary market.',
     realWorldContext: 'Repo markets allow hedge funds to borrow against collateral to buy government debt in secondary markets, creating financial leverage and bond market liquidity.',
     initialState: createDefaultInitialState(),
     steps: [
       {
         stepNumber: 1,
-        title: 'Step 1: Hedge Fund Enters $40B Repo Agreement with Commercial Bank A',
+        title: 'Step 1: Hedge Fund Enters $40 Repo Agreement with Commercial Bank A',
         subtitle: 'Leveraged Repo Loan Origination',
-        description: 'Global Macro Hedge Fund enters a $40B Repurchase Agreement (Repo) with Primary Dealer Bank A. Bank A creates a $40B bank deposit for the Hedge Fund against a Repo loan liability.',
-        accountingExplanation: 'Bank A Assets (Repo Loan) +$40B; Bank A Liabilities (Hedge Fund Deposit) +$40B. Hedge Fund Assets (Bank Deposit) +$40B; Hedge Fund Liabilities (Repo Borrowing) +$40B.',
+        description: 'Global Macro Hedge Fund enters a $40 Repurchase Agreement (Repo) with Primary Dealer Bank A. Bank A creates a $40 bank deposit for the Hedge Fund against a Repo loan liability.',
+        accountingExplanation: 'Bank A Assets (Repo Loan) +$40; Bank A Liabilities (Hedge Fund Deposit) +$40. Hedge Fund Assets (Bank Deposit) +$40; Hedge Fund Liabilities (Repo Borrowing) +$40.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B)',
-          m1Change: '+$40B ($1,390B - expanded dealer bank deposits)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: '+$40 ($1,390 - expanded dealer bank deposits)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'Bank repo financing expands the dealer bank balance sheet on both sides, providing cash leverage to institutional hedge funds.',
         },
         entityDeltas: {
@@ -1258,7 +1398,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'hedge_fund',
             assetType: 'Repo Deposit Credit',
             amount: 40,
-            description: 'Bank A extends $40B repo loan deposit credit to Hedge Fund',
+            description: 'Bank A extends $40 repo loan deposit credit to Hedge Fund',
           },
         ],
         journalEntries: [
@@ -1267,7 +1407,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 1,
             timestamp: '08:30:00',
             title: 'Bank Repo Loan Origination to Hedge Fund',
-            description: 'Bank A provides $40B repo financing deposit to Hedge Fund.',
+            description: 'Bank A provides $40 repo financing deposit to Hedge Fund.',
             entries: [
               { entityId: 'bank_a', accountName: 'Repo Loan Assets', type: 'debit', amount: 40, category: 'asset' },
               { entityId: 'bank_a', accountName: 'Hedge Fund Deposits', type: 'credit', amount: 40, category: 'liability' },
@@ -1279,14 +1419,14 @@ export const scenarios: Scenario[] = [
       },
       {
         stepNumber: 2,
-        title: 'Step 2: Hedge Fund Buys $40B Treasuries from Pension Fund in Secondary Market',
+        title: 'Step 2: Hedge Fund Buys $40 Treasuries from Pension Fund in Secondary Market',
         subtitle: 'Secondary Market Bond Transaction Settled in Bank Deposits',
-        description: 'Hedge Fund uses its $40B bank deposit at Bank A to purchase $40B of US Treasuries from Pension Fund.',
-        accountingExplanation: 'Hedge Fund swaps $40B Bank Deposit (Asset) for $40B Treasuries (Asset). Pension Fund swaps $40B Treasuries (Asset) for $40B Bank Deposit (Asset). Bank A liabilities shift $40B from Hedge Fund Deposit to Pension Fund Deposit.',
+        description: 'Hedge Fund uses its $40 bank deposit at Bank A to purchase $40 of US Treasuries from Pension Fund.',
+        accountingExplanation: 'Hedge Fund swaps $40 Bank Deposit (Asset) for $40 Treasuries (Asset). Pension Fund swaps $40 Treasuries (Asset) for $40 Bank Deposit (Asset). Bank A liabilities shift $40 from Hedge Fund Deposit to Pension Fund Deposit.',
         macroImpact: {
-          m0Change: 'Unchanged ($1,100B)',
-          m1Change: 'Unchanged ($1,390B)',
-          tgaChange: 'Unchanged ($200B)',
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: 'Unchanged ($1,390)',
+          tgaChange: 'Unchanged ($200)',
           keyTakeaway: 'Secondary market bond trades redistribute asset ownership (Treasuries) and deposit liabilities among financial counterparties without changing central bank reserves.',
         },
         entityDeltas: {
@@ -1312,7 +1452,7 @@ export const scenarios: Scenario[] = [
             toEntity: 'pension_fund',
             assetType: 'Secondary Market Deposit Transfer',
             amount: 40,
-            description: 'Hedge Fund pays $40B deposit to Pension Fund for $40B Treasury bonds',
+            description: 'Hedge Fund pays $40 deposit to Pension Fund for $40 Treasury bonds',
           },
         ],
         journalEntries: [
@@ -1321,7 +1461,7 @@ export const scenarios: Scenario[] = [
             stepNumber: 2,
             timestamp: '11:15:00',
             title: 'Secondary Market Treasury Purchase',
-            description: 'Hedge Fund purchases $40B Treasuries from Pension Fund using deposits.',
+            description: 'Hedge Fund purchases $40 Treasuries from Pension Fund using deposits.',
             entries: [
               { entityId: 'hedge_fund', accountName: 'US Treasuries', type: 'debit', amount: 40, category: 'asset' },
               { entityId: 'hedge_fund', accountName: 'Bank Deposits (at Bank A)', type: 'credit', amount: 40, category: 'asset' },
@@ -1329,6 +1469,134 @@ export const scenarios: Scenario[] = [
               { entityId: 'pension_fund', accountName: 'US Treasuries', type: 'credit', amount: 40, category: 'asset' },
               { entityId: 'bank_a', accountName: 'Hedge Fund Deposits', type: 'debit', amount: 40, category: 'liability' },
               { entityId: 'bank_a', accountName: 'Pension Fund Deposits', type: 'credit', amount: 40, category: 'liability' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'eurodollar-correspondent-banking',
+    title: '11. Eurodollar Creation & Offshore Correspondent Banking Settlement',
+    category: 'Advanced Mechanics',
+    difficulty: 'Advanced',
+    description: 'Observe how offshore Foreign Banks create Eurodollars (dollar credit outside US jurisdiction) and settle transactions with the US domestic banking system via Nostro/Vostro correspondent accounts at US Commercial Bank B.',
+    realWorldContext: 'Eurodollars are US dollar-denominated deposits held at non-US banks. Foreign banks create Eurodollars offshore via lending without touching US Fed reserves. Final cross-border settlement into the US domestic economy occurs by reallocating correspondent Nostro/Vostro deposit accounts held at US banks.',
+    initialState: createDefaultInitialState(),
+    steps: [
+      {
+        stepNumber: 1,
+        title: 'Step 1: Foreign Bank Issues $50 Eurodollar Loan to Offshore Partner (UK)',
+        subtitle: 'Offshore Eurodollar Credit Creation (No Fed Reserves Affected)',
+        description: 'Foreign Correspondent Bank extends a $50 dollar-denominated loan to a UK Enterprise. Foreign Bank credits a $50 Eurodollar Deposit for the borrower.',
+        accountingExplanation: 'Foreign Bank Assets (Eurodollar Loans) +$50; Foreign Bank Liabilities (Eurodollar Deposit) +$50. No US domestic bank or Fed balance sheet is touched. Eurodollar credit is created purely offshore.',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100 - No Fed reserves involved)',
+          m1Change: 'Unchanged ($1,350 - Onshore US M1 unaffected)',
+          tgaChange: 'Unchanged ($200)',
+          keyTakeaway: 'Eurodollar creation is offshore dollar credit expansion. Foreign banks create dollar claims without needing US Fed reserves or onshore domestic deposits.',
+        },
+        entityDeltas: {
+          foreign_bank: {
+            assets: { fb_eurodollar_loans: 50 },
+            liabilities: { fb_eurodollar_dep: 50 },
+          },
+          central_bank: {},
+          bank_a: {},
+          bank_b: {},
+          pension_fund: {},
+          individual: {},
+          treasury: {},
+          corporation: {},
+          hedge_fund: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_10_1_1',
+            fromEntity: 'foreign_bank',
+            toEntity: 'foreign_bank',
+            assetType: 'Offshore Eurodollar Deposit',
+            amount: 50,
+            description: 'Foreign Bank credits $50 Eurodollar deposit to UK Partner upon loan agreement',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j10_1',
+            stepNumber: 1,
+            timestamp: '08:00:00',
+            title: 'Offshore Eurodollar Loan Origination',
+            description: 'Foreign Bank creates $50 Eurodollar credit offshore.',
+            entries: [
+              { entityId: 'foreign_bank', accountName: 'Eurodollar Loans & Assets', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'foreign_bank', accountName: 'Eurodollar Deposits (Offshore)', type: 'credit', amount: 50, category: 'liability' },
+            ],
+          },
+        ],
+      },
+      {
+        stepNumber: 2,
+        title: 'Step 2: UK Partner Pays $30 to US Supplier (Onshore Correspondent Settlement)',
+        subtitle: 'Vostro/Nostro Clearing: Offshore Dollars Settled into US Onshore M1',
+        description: 'The UK Partner uses $30 Eurodollars to purchase goods from a Private Individual at US Bank B. To settle, Foreign Bank instructs US Bank B to transfer $30 from Foreign Bank’s Vostro account to the US Individual’s checking deposit at Bank B.',
+        accountingExplanation: 'Foreign Bank: Eurodollar Deposit Liabilities -$30, Nostro Deposit Asset at Bank B -$30. US Bank B: Liabilities shift -$30 from Foreign Bank Vostro Deposit to +$30 US Individual Customer Deposit. US Individual: Assets (Bank B Deposit) +$30, Household Net Worth +$30. Fed Reserves: Unchanged!',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: '+$30 ($1,380 - Eurodollar settlement expands US domestic M1)',
+          tgaChange: 'Unchanged ($200)',
+          keyTakeaway: 'Offshore Eurodollar transactions clear into US onshore broad money (M1) when foreign banks reassign their Vostro correspondent deposits at US domestic banks. Settlement requires no Fed reserves!',
+        },
+        entityDeltas: {
+          foreign_bank: {
+            assets: { fb_nostro_dep: -30 },
+            liabilities: { fb_eurodollar_dep: -30 },
+          },
+          bank_b: {
+            liabilities: { bb_dep_vostro_fb: -30, bb_dep_ind: 30 },
+          },
+          individual: {
+            assets: { ind_dep_bank_b: 30 },
+            equity: { ind_net_worth: 30 },
+          },
+          central_bank: {},
+          bank_a: {},
+          pension_fund: {},
+          treasury: {},
+          corporation: {},
+          hedge_fund: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_10_2_1',
+            fromEntity: 'foreign_bank',
+            toEntity: 'bank_b',
+            assetType: 'Correspondent Payment Instruction',
+            amount: 30,
+            description: 'Foreign Bank instructs US Bank B to reassign $30 Vostro deposit to US Individual',
+          },
+          {
+            id: 'fm_10_2_2',
+            fromEntity: 'bank_b',
+            toEntity: 'individual',
+            assetType: 'Domestic Deposit Credit',
+            amount: 30,
+            description: 'Bank B credits $30 checking deposit to US supplier',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j10_2',
+            stepNumber: 2,
+            timestamp: '14:00:00',
+            title: 'Cross-Border Correspondent Settlement',
+            description: 'Foreign Bank settles $30 Eurodollar payment via US Bank B Vostro account.',
+            entries: [
+              { entityId: 'foreign_bank', accountName: 'Eurodollar Deposits (Offshore)', type: 'debit', amount: 30, category: 'liability' },
+              { entityId: 'foreign_bank', accountName: 'Nostro Deposit (at US Bank B)', type: 'credit', amount: 30, category: 'asset' },
+              { entityId: 'bank_b', accountName: 'Foreign Bank Vostro Deposit', type: 'debit', amount: 30, category: 'liability' },
+              { entityId: 'bank_b', accountName: 'Individual Customer Deposits', type: 'credit', amount: 30, category: 'liability' },
+              { entityId: 'individual', accountName: 'Bank B Deposits', type: 'debit', amount: 30, category: 'asset' },
+              { entityId: 'individual', accountName: 'Household Net Worth', type: 'credit', amount: 30, category: 'equity' },
             ],
           },
         ],

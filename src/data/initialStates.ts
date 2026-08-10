@@ -10,14 +10,15 @@ export const createDefaultInitialState = (): Record<EntityId, EntityBalanceSheet
     color: 'emerald',
     description: 'Issues bank reserves and currency notes, manages monetary policy, and holds the Treasury General Account (TGA).',
     assets: [
-      { id: 'cb_us_treasuries', name: 'US Treasuries (SOMA)', amount: 1000, category: 'asset', detail: 'Government debt purchased via open market operations' },
+      { id: 'cb_us_treasuries', name: 'US Treasuries (SOMA)', amount: 1100, category: 'asset', detail: 'Government debt purchased via open market operations' },
       { id: 'cb_discount_loans', name: 'Discount Loans / DW', amount: 100, category: 'asset', detail: 'Direct liquidity provided to commercial banks' },
     ],
     liabilities: [
       { id: 'cb_reserves_bank_a', name: 'Bank A Reserves', amount: 500, category: 'liability', detail: 'Digital settlement funds owned by Bank A' },
-      { id: 'cb_reserves_bank_b', name: 'Bank B Reserves', amount: 300, category: 'liability', detail: 'Digital settlement funds owned by Bank B' },
+      { id: 'cb_reserves_bank_b', name: 'Bank B Reserves', amount: 400, category: 'liability', detail: 'Digital settlement funds owned by Bank B' },
       { id: 'cb_tga', name: 'Treasury General Account (TGA)', amount: 200, category: 'liability', detail: 'Government operating cash checking account' },
       { id: 'cb_currency_notes', name: 'Currency Notes in Circulation', amount: 100, category: 'liability', detail: 'Physical cash held by households and businesses' },
+      { id: 'cb_rrp_facility', name: 'Overnight Reverse Repo Facility (ON RRP)', amount: 0, category: 'liability', detail: 'Overnight cash deposited by non-bank counterparties (Pension/MMFs)' },
     ],
     equity: [],
   },
@@ -54,13 +55,14 @@ export const createDefaultInitialState = (): Record<EntityId, EntityBalanceSheet
     color: 'indigo',
     description: 'Commercial bank serving households and mid-sized businesses, clearing payments through Bank A or directly at the Fed.',
     assets: [
-      { id: 'bb_reserves', name: 'Reserves at Central Bank', amount: 300, category: 'asset', detail: 'Reserve account balance at Fed' },
+      { id: 'bb_reserves', name: 'Reserves at Central Bank', amount: 400, category: 'asset', detail: 'Reserve account balance at Fed' },
       { id: 'bb_treasuries', name: 'US Treasuries', amount: 100, category: 'asset', detail: 'Government bonds held as liquid assets' },
       { id: 'bb_loans', name: 'Commercial & Retail Loans', amount: 200, category: 'asset', detail: 'Mortgages, consumer loans, business loans' },
     ],
     liabilities: [
       { id: 'bb_dep_ind', name: 'Individual Customer Deposits', amount: 450, category: 'liability', detail: 'Retail deposits (part of M1 broad money)' },
       { id: 'bb_dep_corp', name: 'Corporate Deposits', amount: 100, category: 'liability', detail: 'Commercial checking account liabilities' },
+      { id: 'bb_dep_vostro_fb', name: 'Foreign Bank Vostro Deposit', amount: 100, category: 'liability', detail: 'Correspondent US dollar deposit account held by Foreign Bank' },
     ],
     equity: [
       { id: 'bb_equity', name: 'Bank Equity Capital', amount: 50, category: 'equity', detail: 'Shareholder capital buffer' },
@@ -77,6 +79,7 @@ export const createDefaultInitialState = (): Record<EntityId, EntityBalanceSheet
     description: 'Asset manager holding commercial bank deposits and Treasuries, but lacking a direct Fed reserve account.',
     assets: [
       { id: 'pf_bank_dep', name: 'Bank Deposits (at Bank A)', amount: 400, category: 'asset', detail: 'Commercial bank deposits used for asset allocation' },
+      { id: 'pf_rrp_asset', name: 'ON RRP Deposits at Central Bank', amount: 0, category: 'asset', detail: 'Overnight cash parked directly at Central Bank ON RRP Facility' },
       { id: 'pf_treasuries', name: 'US Treasuries', amount: 300, category: 'asset', detail: 'Long-term government bond investments' },
       { id: 'pf_corp_bonds', name: 'Corporate Bonds / Equities', amount: 100, category: 'asset', detail: 'Private sector investment portfolio' },
     ],
@@ -170,6 +173,26 @@ export const createDefaultInitialState = (): Record<EntityId, EntityBalanceSheet
     ],
     equity: [
       { id: 'hf_equity', name: 'Fund Equity / Capital (NAV)', amount: 200, category: 'equity', detail: 'Net Asset Value belonging to fund investors' },
+    ],
+  },
+
+  foreign_bank: {
+    id: 'foreign_bank',
+    name: 'Foreign Correspondent Bank (UK / Offshore)',
+    shortName: 'Foreign Bank',
+    type: 'Offshore Commercial Bank',
+    badgeText: 'Eurodollar Issuer',
+    color: 'indigo',
+    description: 'Offshore non-US commercial bank holding a Nostro deposit account at US Bank B and issuing Eurodollar liabilities.',
+    assets: [
+      { id: 'fb_nostro_dep', name: 'Nostro Deposit (at US Bank B)', amount: 100, category: 'asset', detail: 'US dollar correspondent reserve account at Bank B' },
+      { id: 'fb_eurodollar_loans', name: 'Eurodollar Loans & Assets', amount: 100, category: 'asset', detail: 'Dollar loans issued to UK and international borrowers' },
+    ],
+    liabilities: [
+      { id: 'fb_eurodollar_dep', name: 'Eurodollar Deposits (Offshore)', amount: 150, category: 'liability', detail: 'Dollar-denominated deposit liabilities owed to UK/offshore clients' },
+    ],
+    equity: [
+      { id: 'fb_equity', name: 'Bank Equity & Capital', amount: 50, category: 'equity', detail: 'Offshore bank capital and reserves' },
     ],
   },
 });

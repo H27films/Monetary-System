@@ -39,9 +39,9 @@ export const Header: React.FC<HeaderProps> = ({
   const activeScenario = scenarios.find((s) => s.id === activeScenarioId) || scenarios[0];
 
   return (
-    <header className="bg-[#FAF8F5] text-[#1A1A1A] border-b border-[#E2DDD5] sticky top-0 z-40 shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between py-3.5 gap-3 border-b border-[#E8E4DC]">
+    <header className="bg-[#FAF8F5] text-[#1A1A1A]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-[#E8E4DC]">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between py-3.5 gap-3">
           
           {/* Brand Identity */}
           <div className="flex items-center space-x-3">
@@ -150,80 +150,84 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
         </div>
+      </div>
 
-        {/* View Navigation Tabs */}
-        <div className="flex items-center space-x-1.5 overflow-x-auto py-2 no-scrollbar text-xs">
-          <button
-            onClick={() => onTabChange('t_accounts')}
-            className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
-              activeTab === 't_accounts'
-                ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
-                : 'bg-white text-zinc-600 border-[#E2DDD5] hover:text-[#1A1A1A] hover:bg-zinc-50'
-            }`}
-          >
-            <Landmark className="w-3.5 h-3.5" />
-            <span>T-Accounts Ledger</span>
-          </button>
+      {/* View Navigation Tabs Sticky Bar */}
+      <div id="sticky-header-tabs" className="sticky top-0 z-50 bg-[#FAF8F5] border-b border-[#E2DDD5] shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center space-x-1.5 overflow-x-auto py-2 no-scrollbar text-xs">
+            <button
+              onClick={() => onTabChange('t_accounts')}
+              className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
+                activeTab === 't_accounts'
+                  ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
+                  : 'bg-white text-zinc-600 border-[#E2DDD5] hover:text-[#1A1A1A] hover:bg-zinc-50'
+              }`}
+            >
+              <Landmark className="w-3.5 h-3.5" />
+              <span>T-Accounts Ledger</span>
+            </button>
 
-          <button
-            onClick={() => onTabChange('chart')}
-            className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
-              activeTab === 'chart'
-                ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
-                : 'bg-white text-zinc-600 border-[#E2DDD5] hover:text-[#1A1A1A] hover:bg-zinc-50'
-            }`}
-          >
-            <BarChart3 className="w-3.5 h-3.5" />
-            <span>Visual Balance Chart</span>
-          </button>
+            <button
+              onClick={() => onTabChange('chart')}
+              className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
+                activeTab === 'chart'
+                  ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
+                  : 'bg-white text-zinc-600 border-[#E2DDD5] hover:text-[#1A1A1A] hover:bg-zinc-50'
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5" />
+              <span>Visual Balance Chart</span>
+            </button>
 
-          <button
-            onClick={() => onTabChange('flow')}
-            className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
-              activeTab === 'flow'
-                ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
-                : 'bg-white text-zinc-600 border-[#E2DDD5] hover:text-[#1A1A1A] hover:bg-zinc-50'
-            }`}
-          >
-            <ArrowLeftRight className="w-3.5 h-3.5" />
-            <span>Flow Vectors Map</span>
-          </button>
+            <button
+              onClick={() => onTabChange('flow')}
+              className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
+                activeTab === 'flow'
+                  ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
+                  : 'bg-white text-zinc-600 border-[#E2DDD5] hover:text-[#1A1A1A] hover:bg-zinc-50'
+              }`}
+            >
+              <ArrowLeftRight className="w-3.5 h-3.5" />
+              <span>Flow Vectors Map</span>
+            </button>
 
-          <button
-            onClick={() => onTabChange('sandbox')}
-            className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
-              activeTab === 'sandbox'
-                ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
-                : 'bg-white text-zinc-600 border-[#E2DDD5] hover:text-[#1A1A1A] hover:bg-zinc-50'
-            }`}
-          >
-            <Wrench className="w-3.5 h-3.5" />
-            <span>Sandbox Engine</span>
-          </button>
+            <button
+              onClick={() => onTabChange('sandbox')}
+              className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
+                activeTab === 'sandbox'
+                  ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
+                  : 'bg-white text-zinc-600 border-[#E2DDD5] hover:text-[#1A1A1A] hover:bg-zinc-50'
+              }`}
+            >
+              <Wrench className="w-3.5 h-3.5" />
+              <span>Sandbox Engine</span>
+            </button>
 
-          <button
-            onClick={() => onTabChange('journal')}
-            className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
-              activeTab === 'journal'
-                ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
-                : 'bg-white text-zinc-600 border-[#E2DDD5] hover:text-[#1A1A1A] hover:bg-zinc-50'
-            }`}
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Audit Journal</span>
-          </button>
+            <button
+              onClick={() => onTabChange('journal')}
+              className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
+                activeTab === 'journal'
+                  ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
+                  : 'bg-white text-zinc-600 border-[#E2DDD5] hover:text-[#1A1A1A] hover:bg-zinc-50'
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Audit Journal</span>
+            </button>
 
-          <button
-            onClick={() => onTabChange('ai')}
-            className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
-              activeTab === 'ai'
-                ? 'bg-[#D93829] text-white border-[#D93829] shadow-xs'
-                : 'bg-white text-[#D93829] border-[#E2DDD5] hover:bg-rose-50/50'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Ask AI Economist</span>
-          </button>
+            <button
+              onClick={() => onTabChange('ai')}
+              className={`flex items-center space-x-2 px-3 py-1.5 font-sans text-xs font-medium rounded-lg transition cursor-pointer whitespace-nowrap border ${
+                activeTab === 'ai'
+                  ? 'bg-[#D93829] text-white border-[#D93829] shadow-xs'
+                  : 'bg-white text-[#D93829] border-[#E2DDD5] hover:bg-rose-50/50'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Ask AI Economist</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>

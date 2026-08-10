@@ -30,9 +30,11 @@ export default function App() {
   const [enabledOptionalActors, setEnabledOptionalActors] = useState<{
     corporation: boolean;
     hedge_fund: boolean;
+    foreign_bank: boolean;
   }>({
     corporation: false,
     hedge_fund: false,
+    foreign_bank: false,
   });
 
   // Custom initial balances state override
@@ -68,6 +70,9 @@ export default function App() {
     }
     if (enabledOptionalActors.hedge_fund || activeScenarioId === 'hedge-fund-repo-treasury') {
       list.push('hedge_fund');
+    }
+    if (enabledOptionalActors.foreign_bank || activeScenarioId === 'eurodollar-correspondent-banking') {
+      list.push('foreign_bank');
     }
     return list;
   }, [enabledOptionalActors, activeScenarioId]);
@@ -124,7 +129,7 @@ export default function App() {
     }));
   };
 
-  const handleToggleOptionalActor = (actor: 'corporation' | 'hedge_fund') => {
+  const handleToggleOptionalActor = (actor: 'corporation' | 'hedge_fund' | 'foreign_bank') => {
     setEnabledOptionalActors((prev) => ({
       ...prev,
       [actor]: !prev[actor],
@@ -224,6 +229,17 @@ export default function App() {
                     }`}
                   >
                     <span>{enabledOptionalActors.hedge_fund || activeScenarioId === 'hedge-fund-repo-treasury' ? '✓ Active' : '+ Add'} Global Macro Hedge Fund</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleToggleOptionalActor('foreign_bank')}
+                    className={`px-3 py-1.5 rounded-lg border font-medium transition cursor-pointer flex items-center space-x-1.5 ${
+                      enabledOptionalActors.foreign_bank || activeScenarioId === 'eurodollar-correspondent-banking'
+                        ? 'bg-indigo-50 text-indigo-900 border-indigo-300 font-semibold'
+                        : 'bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-100'
+                    }`}
+                  >
+                    <span>{enabledOptionalActors.foreign_bank || activeScenarioId === 'eurodollar-correspondent-banking' ? '✓ Active' : '+ Add'} Foreign Correspondent Bank</span>
                   </button>
                 </div>
               </div>

@@ -6,7 +6,8 @@ export type EntityId =
   | 'individual' 
   | 'treasury'
   | 'corporation'
-  | 'hedge_fund';
+  | 'hedge_fund'
+  | 'foreign_bank';
 
 export interface AccountItem {
   id: string;
@@ -68,13 +69,15 @@ export interface MonetaryStep {
   };
   // Changes applied to balance sheet in this step
   // Structure: entityDeltas[entityId][category][accountId] = deltaValue
-  entityDeltas: Record<
-    EntityId,
-    {
-      assets?: Record<string, number>;
-      liabilities?: Record<string, number>;
-      equity?: Record<string, number>;
-    }
+  entityDeltas: Partial<
+    Record<
+      EntityId,
+      {
+        assets?: Record<string, number>;
+        liabilities?: Record<string, number>;
+        equity?: Record<string, number>;
+      }
+    >
   >;
   flowingMoney?: MoneyFlow[];
   journalEntries?: JournalEntry[];

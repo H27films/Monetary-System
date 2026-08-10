@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Settings, X, RotateCcw, Link2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { EntityId, EntityBalanceSheet, AccountItem } from '../types/monetary';
 import { formatCurrency } from '../utils/monetaryEngine';
@@ -10,8 +10,8 @@ interface SettingsModalProps {
   initialSheets: Record<EntityId, EntityBalanceSheet>;
   onSaveInitialSheets: (updated: Record<EntityId, EntityBalanceSheet>) => void;
   onResetToDefault: () => void;
-  enabledOptionalActors?: { corporation: boolean; hedge_fund: boolean };
-  onToggleOptionalActor?: (actor: 'corporation' | 'hedge_fund') => void;
+  enabledOptionalActors?: { corporation: boolean; hedge_fund: boolean; foreign_bank: boolean };
+  onToggleOptionalActor?: (actor: 'corporation' | 'hedge_fund' | 'foreign_bank') => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -20,12 +20,20 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   initialSheets,
   onSaveInitialSheets,
   onResetToDefault,
+  enabledOptionalActors,
+  onToggleOptionalActor,
 }) => {
   const [draftSheets, setDraftSheets] = useState<Record<EntityId, EntityBalanceSheet>>(() =>
-    JSON.parse(JSON.stringify(initialSheets))
+    JSON.parse(JSON.stringify(initialSheets || {}))
   );
 
   const [activeEntityId, setActiveEntityId] = useState<EntityId>('central_bank');
+
+  useEffect(() => {
+    if (isOpen && initialSheets) {
+      setDraftSheets(JSON.parse(JSON.stringify(initialSheets)));
+    }
+  }, [isOpen, initialSheets]);
 
   if (!isOpen) return null;
 
@@ -160,7 +168,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     onResetToDefault();
   };
 
-  const activeSheet = draftSheets[activeEntityId];
+  const activeSheet = draftSheets[activeEntityId] || draftSheets['central_bank'] || (Object.values(draftSheets)[0] as EntityBalanceSheet | undefined);
+
+  if (!activeSheet) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
@@ -370,6 +382,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 >
                   <span className="w-2 h-2 rounded-full bg-orange-600"></span>
                   <span>{enabledOptionalActors.hedge_fund ? '✓ Enabled' : '+ Enable'} Global Macro Hedge Fund</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => onToggleOptionalActor('foreign_bank')}
+                  className={`px-3.5 py-2 rounded-lg text-xs font-sans font-medium border transition cursor-pointer flex items-center space-x-2 ${
+                    enabledOptionalActors.foreign_bank
+                      ? 'bg-indigo-50 text-indigo-900 border-indigo-300 font-semibold'
+                      : 'bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100'
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
+                  <span>{enabledOptionalActors.foreign_bank ? '✓ Enabled' : '+ Enable'} Foreign Correspondent Bank</span>
                 </button>
               </div>
             </div>
