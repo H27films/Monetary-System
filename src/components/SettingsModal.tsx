@@ -10,6 +10,8 @@ interface SettingsModalProps {
   initialSheets: Record<EntityId, EntityBalanceSheet>;
   onSaveInitialSheets: (updated: Record<EntityId, EntityBalanceSheet>) => void;
   onResetToDefault: () => void;
+  enabledOptionalActors?: { corporation: boolean; hedge_fund: boolean };
+  onToggleOptionalActor?: (actor: 'corporation' | 'hedge_fund') => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -333,6 +335,45 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
 
           </div>
+
+          {/* Optional Actors Controls */}
+          {enabledOptionalActors && onToggleOptionalActor && (
+            <div className="bg-[#FAF8F5] p-4 rounded-xl border border-[#E2DDD5] space-y-2">
+              <div className="text-xs font-sans font-semibold text-[#1A1A1A] uppercase tracking-wider">
+                Optional System Participant Actors
+              </div>
+              <p className="text-xs font-sans text-zinc-500">
+                Enable or disable specialized market actors across T-accounts, flow vectors, and comparative balance sheet charts:
+              </p>
+              <div className="flex flex-wrap gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => onToggleOptionalActor('corporation')}
+                  className={`px-3.5 py-2 rounded-lg text-xs font-sans font-medium border transition cursor-pointer flex items-center space-x-2 ${
+                    enabledOptionalActors.corporation
+                      ? 'bg-teal-50 text-teal-900 border-teal-300 font-semibold'
+                      : 'bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100'
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-teal-600"></span>
+                  <span>{enabledOptionalActors.corporation ? '✓ Enabled' : '+ Enable'} Private Corporation</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => onToggleOptionalActor('hedge_fund')}
+                  className={`px-3.5 py-2 rounded-lg text-xs font-sans font-medium border transition cursor-pointer flex items-center space-x-2 ${
+                    enabledOptionalActors.hedge_fund
+                      ? 'bg-orange-50 text-orange-900 border-orange-300 font-semibold'
+                      : 'bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-100'
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-orange-600"></span>
+                  <span>{enabledOptionalActors.hedge_fund ? '✓ Enabled' : '+ Enable'} Global Macro Hedge Fund</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Modal Footer */}

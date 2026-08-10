@@ -129,4 +129,47 @@ export const createDefaultInitialState = (): Record<EntityId, EntityBalanceSheet
       { id: 'tr_net_fiscal', name: 'Sovereign Fiscal Balance', amount: -1330, category: 'equity', detail: 'Cumulative national debt surplus / deficit' },
     ],
   },
+
+  corporation: {
+    id: 'corporation',
+    name: 'Private Corporation (Real Economy Business)',
+    shortName: 'Private Corporation',
+    type: 'Corporate Entity',
+    badgeText: 'Issuer of Corporate Debt',
+    color: 'teal',
+    description: 'Non-financial enterprise issuing corporate bonds, holding commercial bank deposits, and investing in capital operations.',
+    assets: [
+      { id: 'corp_bank_dep', name: 'Bank Deposits (at Bank A & B)', amount: 300, category: 'asset', detail: 'Commercial bank checking accounts used for payroll & capex' },
+      { id: 'corp_treasuries', name: 'US Treasuries', amount: 50, category: 'asset', detail: 'Corporate treasury liquidity reserve' },
+      { id: 'corp_fixed_assets', name: 'Property, Plant & Equipment', amount: 200, category: 'asset', detail: 'Physical capital assets and machinery' },
+    ],
+    liabilities: [
+      { id: 'corp_bonds_issued', name: 'Corporate Bonds Issued', amount: 150, category: 'liability', detail: 'Bonds issued to investors and financial institutions' },
+      { id: 'corp_bank_loans', name: 'Bank Credit & Loans', amount: 100, category: 'liability', detail: 'Commercial bank revolving credit loans' },
+    ],
+    equity: [
+      { id: 'corp_equity', name: 'Shareholder Equity & Retained Earnings', amount: 300, category: 'equity', detail: 'Corporate net asset equity value' },
+    ],
+  },
+
+  hedge_fund: {
+    id: 'hedge_fund',
+    name: 'Global Macro Hedge Fund',
+    shortName: 'Hedge Fund',
+    type: 'Leveraged Institutional Investor',
+    badgeText: 'Repo Leveraged Investor',
+    color: 'orange',
+    description: 'Active financial fund taking leveraged positions in US Treasuries and corporate debt using repo borrowing with dealer banks.',
+    assets: [
+      { id: 'hf_bank_dep', name: 'Bank Deposits (at Bank A)', amount: 100, category: 'asset', detail: 'Cash deposits at dealer bank' },
+      { id: 'hf_treasuries', name: 'US Treasuries', amount: 250, category: 'asset', detail: 'Treasury securities held for repo arbitrage / yield' },
+      { id: 'hf_corp_bonds', name: 'Corporate Bonds', amount: 50, category: 'asset', detail: 'Private corporate bond holdings' },
+    ],
+    liabilities: [
+      { id: 'hf_repo_liab', name: 'Bank Repo Loan Liabilities', amount: 200, category: 'liability', detail: 'Short-term repurchase agreement borrowing from Bank A' },
+    ],
+    equity: [
+      { id: 'hf_equity', name: 'Fund Equity / Capital (NAV)', amount: 200, category: 'equity', detail: 'Net Asset Value belonging to fund investors' },
+    ],
+  },
 });

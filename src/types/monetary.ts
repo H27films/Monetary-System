@@ -4,7 +4,9 @@ export type EntityId =
   | 'bank_b' 
   | 'pension_fund' 
   | 'individual' 
-  | 'treasury';
+  | 'treasury'
+  | 'corporation'
+  | 'hedge_fund';
 
 export interface AccountItem {
   id: string;

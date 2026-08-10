@@ -1079,4 +1079,260 @@ export const scenarios: Scenario[] = [
       },
     ],
   },
+
+  {
+    id: 'corporate-bond-issuance',
+    title: '8. Corporate Bond Issuance & Business Capital Outlay',
+    category: 'Advanced Mechanics',
+    description: 'Observe the step-by-step T-account mechanics when a Private Corporation issues corporate debt/bonds directly to Pension Funds and uses deposit proceeds for worker payroll and capex.',
+    realWorldContext: 'Corporate bond markets allow companies to borrow directly from institutional investors like Pension Funds. The transaction transfers commercial bank deposits from investors to the corporation.',
+    initialState: createDefaultInitialState(),
+    steps: [
+      {
+        stepNumber: 1,
+        title: 'Step 1: Private Corporation Issues $50B Corporate Bonds to Pension Fund',
+        subtitle: 'Institutional Debt Financing via Bank Deposit Transfer',
+        description: 'Private Corporation issues $50B in corporate bonds. Pension Fund purchases the bonds using $50B of its bank deposits held at Bank A.',
+        accountingExplanation: 'Corporation increases Corporate Bonds Issued (Liability) by $50B and receives $50B Bank Deposits (Asset) at Bank A. Pension Fund swaps $50B Bank Deposit (Asset) for $50B Corporate Bonds (Asset). On Bank A liabilities, $50B shifts from Pension Fund Deposit to Corporation Deposit.',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100B)',
+          m1Change: 'Unchanged ($1,350B - shift from institutional deposit to corporate deposit)',
+          tgaChange: 'Unchanged ($200B)',
+          keyTakeaway: 'Corporate bond sales do not create new deposits (unlike bank loan origination); instead, they reallocate existing broad money (M1) from investors to corporate bank accounts.',
+        },
+        entityDeltas: {
+          corporation: {
+            assets: { corp_bank_dep: 50 },
+            liabilities: { corp_bonds_issued: 50 },
+          },
+          pension_fund: {
+            assets: { pf_bank_dep: -50, pf_corp_bonds: 50 },
+          },
+          bank_a: {
+            liabilities: { ba_dep_pension: -50, ba_dep_corp: 50 },
+          },
+          central_bank: {},
+          bank_b: {},
+          individual: {},
+          treasury: {},
+          hedge_fund: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_8_1_1',
+            fromEntity: 'pension_fund',
+            toEntity: 'corporation',
+            assetType: 'Commercial Bank Deposit',
+            amount: 50,
+            description: 'Pension Fund transfers $50B deposit to Private Corporation for new corporate bond issuance',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j8_1',
+            stepNumber: 1,
+            timestamp: '09:00:00',
+            title: 'Corporate Bond Primary Issuance',
+            description: 'Corporation issues $50B bonds purchased by Pension Fund using Bank A deposits.',
+            entries: [
+              { entityId: 'corporation', accountName: 'Bank Deposits (at Bank A)', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'corporation', accountName: 'Corporate Bonds Issued', type: 'credit', amount: 50, category: 'liability' },
+              { entityId: 'pension_fund', accountName: 'Corporate Bonds Holdings', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'pension_fund', accountName: 'Bank Deposits (at Bank A)', type: 'credit', amount: 50, category: 'asset' },
+              { entityId: 'bank_a', accountName: 'Pension Fund Deposits', type: 'debit', amount: 50, category: 'liability' },
+              { entityId: 'bank_a', accountName: 'Corporate Deposits', type: 'credit', amount: 50, category: 'liability' },
+            ],
+          },
+        ],
+      },
+      {
+        stepNumber: 2,
+        title: 'Step 2: Private Corporation Spends $30B Deposit on Payroll & Equipment',
+        subtitle: 'Corporate Capital Outlays & Retail Deposit Reallocation',
+        description: 'Private Corporation spends $30B of deposit funds to pay Private Individual workers and suppliers at Bank B.',
+        accountingExplanation: 'Corporation Bank A Deposit -$30B; Property/Equipment Asset +$30B. Bank A loses $30B Deposit Liability and $30B Reserves at Fed. Fed shifts $30B Reserves from Bank A to Bank B. Bank B gets $30B Reserves and credits Individual Deposit +$30B. Individual Assets (Bank B Deposit) +$30B, Equity (Net Worth) +$30B.',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100B)',
+          m1Change: 'Unchanged ($1,350B)',
+          tgaChange: 'Unchanged ($200B)',
+          keyTakeaway: 'Capital spending transfers corporate liquidity into household deposit accounts, driving velocity of broad money M1 without changing total base money.',
+        },
+        entityDeltas: {
+          corporation: {
+            assets: { corp_bank_dep: -30, corp_fixed_assets: 30 },
+          },
+          bank_a: {
+            assets: { ba_reserves: -30 },
+            liabilities: { ba_dep_corp: -30 },
+          },
+          bank_b: {
+            assets: { bb_reserves: 30 },
+            liabilities: { bb_dep_ind: 30 },
+          },
+          central_bank: {
+            liabilities: { cb_reserves_bank_a: -30, cb_reserves_bank_b: 30 },
+          },
+          individual: {
+            assets: { ind_dep_bank_b: 30 },
+            equity: { ind_net_worth: 30 },
+          },
+          pension_fund: {},
+          treasury: {},
+          hedge_fund: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_8_2_1',
+            fromEntity: 'corporation',
+            toEntity: 'individual',
+            assetType: 'Payroll & Capex Deposit Transfer',
+            amount: 30,
+            description: 'Corporation pays $30B to Individual workers & suppliers at Bank B',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j8_2',
+            stepNumber: 2,
+            timestamp: '14:30:00',
+            title: 'Corporate Capital & Payroll Expenditure',
+            description: 'Corporation transfers $30B from Bank A to Individual account at Bank B.',
+            entries: [
+              { entityId: 'corporation', accountName: 'Property, Plant & Equipment', type: 'debit', amount: 30, category: 'asset' },
+              { entityId: 'corporation', accountName: 'Bank Deposits (at Bank A)', type: 'credit', amount: 30, category: 'asset' },
+              { entityId: 'bank_a', accountName: 'Corporate Deposits', type: 'debit', amount: 30, category: 'liability' },
+              { entityId: 'bank_a', accountName: 'Reserves at Central Bank', type: 'credit', amount: 30, category: 'asset' },
+              { entityId: 'central_bank', accountName: 'Bank A Reserves', type: 'debit', amount: 30, category: 'liability' },
+              { entityId: 'central_bank', accountName: 'Bank B Reserves', type: 'credit', amount: 30, category: 'liability' },
+              { entityId: 'bank_b', accountName: 'Reserves at Central Bank', type: 'debit', amount: 30, category: 'asset' },
+              { entityId: 'bank_b', accountName: 'Individual Customer Deposits', type: 'credit', amount: 30, category: 'liability' },
+              { entityId: 'individual', accountName: 'Bank B Deposits', type: 'debit', amount: 30, category: 'asset' },
+              { entityId: 'individual', accountName: 'Household Net Worth', type: 'credit', amount: 30, category: 'equity' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    id: 'hedge-fund-repo-treasury',
+    title: '9. Hedge Fund Repo Leverage & Secondary Treasury Arbitrage',
+    category: 'Advanced Mechanics',
+    description: 'Examine how a Global Macro Hedge Fund enters into a Repo agreement with Bank A to obtain deposit leverage, then uses that leverage to purchase Treasuries from the Pension Fund on the secondary market.',
+    realWorldContext: 'Repo markets allow hedge funds to borrow against collateral to buy government debt in secondary markets, creating financial leverage and bond market liquidity.',
+    initialState: createDefaultInitialState(),
+    steps: [
+      {
+        stepNumber: 1,
+        title: 'Step 1: Hedge Fund Enters $40B Repo Agreement with Commercial Bank A',
+        subtitle: 'Leveraged Repo Loan Origination',
+        description: 'Global Macro Hedge Fund enters a $40B Repurchase Agreement (Repo) with Primary Dealer Bank A. Bank A creates a $40B bank deposit for the Hedge Fund against a Repo loan liability.',
+        accountingExplanation: 'Bank A Assets (Repo Loan) +$40B; Bank A Liabilities (Hedge Fund Deposit) +$40B. Hedge Fund Assets (Bank Deposit) +$40B; Hedge Fund Liabilities (Repo Borrowing) +$40B.',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100B)',
+          m1Change: '+$40B ($1,390B - expanded dealer bank deposits)',
+          tgaChange: 'Unchanged ($200B)',
+          keyTakeaway: 'Bank repo financing expands the dealer bank balance sheet on both sides, providing cash leverage to institutional hedge funds.',
+        },
+        entityDeltas: {
+          hedge_fund: {
+            assets: { hf_bank_dep: 40 },
+            liabilities: { hf_repo_liab: 40 },
+          },
+          bank_a: {
+            assets: { ba_loans: 40 },
+            liabilities: { ba_dep_corp: 40 },
+          },
+          central_bank: {},
+          bank_b: {},
+          pension_fund: {},
+          individual: {},
+          treasury: {},
+          corporation: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_9_1_1',
+            fromEntity: 'bank_a',
+            toEntity: 'hedge_fund',
+            assetType: 'Repo Deposit Credit',
+            amount: 40,
+            description: 'Bank A extends $40B repo loan deposit credit to Hedge Fund',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j9_1',
+            stepNumber: 1,
+            timestamp: '08:30:00',
+            title: 'Bank Repo Loan Origination to Hedge Fund',
+            description: 'Bank A provides $40B repo financing deposit to Hedge Fund.',
+            entries: [
+              { entityId: 'bank_a', accountName: 'Repo Loan Assets', type: 'debit', amount: 40, category: 'asset' },
+              { entityId: 'bank_a', accountName: 'Hedge Fund Deposits', type: 'credit', amount: 40, category: 'liability' },
+              { entityId: 'hedge_fund', accountName: 'Bank Deposits (at Bank A)', type: 'debit', amount: 40, category: 'asset' },
+              { entityId: 'hedge_fund', accountName: 'Bank Repo Liabilities', type: 'credit', amount: 40, category: 'liability' },
+            ],
+          },
+        ],
+      },
+      {
+        stepNumber: 2,
+        title: 'Step 2: Hedge Fund Buys $40B Treasuries from Pension Fund in Secondary Market',
+        subtitle: 'Secondary Market Bond Transaction Settled in Bank Deposits',
+        description: 'Hedge Fund uses its $40B bank deposit at Bank A to purchase $40B of US Treasuries from Pension Fund.',
+        accountingExplanation: 'Hedge Fund swaps $40B Bank Deposit (Asset) for $40B Treasuries (Asset). Pension Fund swaps $40B Treasuries (Asset) for $40B Bank Deposit (Asset). Bank A liabilities shift $40B from Hedge Fund Deposit to Pension Fund Deposit.',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100B)',
+          m1Change: 'Unchanged ($1,390B)',
+          tgaChange: 'Unchanged ($200B)',
+          keyTakeaway: 'Secondary market bond trades redistribute asset ownership (Treasuries) and deposit liabilities among financial counterparties without changing central bank reserves.',
+        },
+        entityDeltas: {
+          hedge_fund: {
+            assets: { hf_bank_dep: -40, hf_treasuries: 40 },
+          },
+          pension_fund: {
+            assets: { pf_treasuries: -40, pf_bank_dep: 40 },
+          },
+          bank_a: {
+            liabilities: { ba_dep_corp: -40, ba_dep_pension: 40 },
+          },
+          central_bank: {},
+          bank_b: {},
+          individual: {},
+          treasury: {},
+          corporation: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_9_2_1',
+            fromEntity: 'hedge_fund',
+            toEntity: 'pension_fund',
+            assetType: 'Secondary Market Deposit Transfer',
+            amount: 40,
+            description: 'Hedge Fund pays $40B deposit to Pension Fund for $40B Treasury bonds',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j9_2',
+            stepNumber: 2,
+            timestamp: '11:15:00',
+            title: 'Secondary Market Treasury Purchase',
+            description: 'Hedge Fund purchases $40B Treasuries from Pension Fund using deposits.',
+            entries: [
+              { entityId: 'hedge_fund', accountName: 'US Treasuries', type: 'debit', amount: 40, category: 'asset' },
+              { entityId: 'hedge_fund', accountName: 'Bank Deposits (at Bank A)', type: 'credit', amount: 40, category: 'asset' },
+              { entityId: 'pension_fund', accountName: 'Bank Deposits (at Bank A)', type: 'debit', amount: 40, category: 'asset' },
+              { entityId: 'pension_fund', accountName: 'US Treasuries', type: 'credit', amount: 40, category: 'asset' },
+              { entityId: 'bank_a', accountName: 'Hedge Fund Deposits', type: 'debit', amount: 40, category: 'liability' },
+              { entityId: 'bank_a', accountName: 'Pension Fund Deposits', type: 'credit', amount: 40, category: 'liability' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ];

@@ -14,6 +14,7 @@ import { JournalLogView } from './components/JournalLogView';
 import { BalanceChartView } from './components/BalanceChartView';
 import { AiExplainerModal } from './components/AiExplainerModal';
 import { SettingsModal } from './components/SettingsModal';
+import { Users } from 'lucide-react';
 
 import { scenarios } from './data/scenarios';
 import { createDefaultInitialState } from './data/initialStates';
@@ -24,6 +25,15 @@ export default function App() {
   const [activeScenarioId, setActiveScenarioId] = useState<string>(scenarios[0].id);
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<'t_accounts' | 'flow' | 'sandbox' | 'journal' | 'chart' | 'ai'>('t_accounts');
+
+  // Optional actors enable state
+  const [enabledOptionalActors, setEnabledOptionalActors] = useState<{
+    corporation: boolean;
+    hedge_fund: boolean;
+  }>({
+    corporation: false,
+    hedge_fund: false,
+  });
 
   // Custom initial balances state override
   const [customInitialSheets, setCustomInitialSheets] = useState<Record<EntityId, EntityBalanceSheet> | null>(null);
@@ -49,6 +59,18 @@ export default function App() {
   const activeScenario = useMemo(() => {
     return scenarios.find((s) => s.id === activeScenarioId) || scenarios[0];
   }, [activeScenarioId]);
+
+  // Active entity list including optional actors
+  const activeEntityIds = useMemo<EntityId[]>(() => {
+    const list: EntityId[] = ['central_bank', 'treasury', 'bank_a', 'bank_b', 'pension_fund', 'individual'];
+    if (enabledOptionalActors.corporation || activeScenarioId === 'corporate-bond-issuance') {
+      list.push('corporation');
+    }
+    if (enabledOptionalActors.hedge_fund || activeScenarioId === 'hedge-fund-repo-treasury') {
+      list.push('hedge_fund');
+    }
+    return list;
+  }, [enabledOptionalActors, activeScenarioId]);
 
   // Determine effective initial state (custom vs default)
   const effectiveInitialState = useMemo(() => {
@@ -102,6 +124,13 @@ export default function App() {
     }));
   };
 
+  const handleToggleOptionalActor = (actor: 'corporation' | 'hedge_fund') => {
+    setEnabledOptionalActors((prev) => ({
+      ...prev,
+      [actor]: !prev[actor],
+    }));
+  };
+
   // List of all journals for journal tab
   const allJournals = useMemo(() => {
     const stepJournals = activeScenario.steps
@@ -147,43 +176,56 @@ export default function App() {
               currentBalanceSheets={displayBalanceSheets}
             />
 
-            {/* Grid of 6 T-Account Balance Sheets (2 accounts per row, 3 rows) */}
+            {/* Grid of T-Account Balance Sheets */}
             <div>
               <div className="flex items-center justify-between gap-2 mb-4">
                 <h3 className="text-xs font-sans font-semibold text-zinc-600 uppercase tracking-wider">
-                  Live Balance Sheet Ledger Cards (Double-Entry T-Accounts)
+                  Live Balance Sheet Ledger Cards ({activeEntityIds.length} Active System Actors)
                 </h3>
                 <span className="text-xs font-serif text-zinc-500 italic">
                   * Highlighting deltas for Step {activeStepIndex + 1}: Assets | Liabilities | Equity
                 </span>
               </div>
 
-              {/* Layout constraint requested: 2 accounts per row, 3 rows */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <TAccountCard
-                  entity={displayBalanceSheets.central_bank}
-                  isFocused={Object.keys(currentStep.entityDeltas.central_bank || {}).length > 0}
-                />
-                <TAccountCard
-                  entity={displayBalanceSheets.treasury}
-                  isFocused={Object.keys(currentStep.entityDeltas.treasury || {}).length > 0}
-                />
-                <TAccountCard
-                  entity={displayBalanceSheets.bank_a}
-                  isFocused={Object.keys(currentStep.entityDeltas.bank_a || {}).length > 0}
-                />
-                <TAccountCard
-                  entity={displayBalanceSheets.bank_b}
-                  isFocused={Object.keys(currentStep.entityDeltas.bank_b || {}).length > 0}
-                />
-                <TAccountCard
-                  entity={displayBalanceSheets.pension_fund}
-                  isFocused={Object.keys(currentStep.entityDeltas.pension_fund || {}).length > 0}
-                />
-                <TAccountCard
-                  entity={displayBalanceSheets.individual}
-                  isFocused={Object.keys(currentStep.entityDeltas.individual || {}).length > 0}
-                />
+                {activeEntityIds.map((id) => (
+                  <TAccountCard
+                    key={id}
+                    entity={displayBalanceSheets[id]}
+                    isFocused={Object.keys(currentStep.entityDeltas[id] || {}).length > 0}
+                  />
+                ))}
+              </div>
+
+              {/* Optional Participant Actors Control Bar */}
+              <div className="bg-[#FAF8F5] border border-[#E2DDD5] rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-sans mt-6 shadow-xs">
+                <div className="flex items-center space-x-2 text-zinc-700 font-medium">
+                  <Users className="w-4 h-4 text-zinc-600" />
+                  <span>Optional System Participant Actors:</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={() => handleToggleOptionalActor('corporation')}
+                    className={`px-3 py-1.5 rounded-lg border font-medium transition cursor-pointer flex items-center space-x-1.5 ${
+                      enabledOptionalActors.corporation || activeScenarioId === 'corporate-bond-issuance'
+                        ? 'bg-teal-50 text-teal-900 border-teal-300 font-semibold'
+                        : 'bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-100'
+                    }`}
+                  >
+                    <span>{enabledOptionalActors.corporation || activeScenarioId === 'corporate-bond-issuance' ? '✓ Active' : '+ Add'} Private Corporation</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleToggleOptionalActor('hedge_fund')}
+                    className={`px-3 py-1.5 rounded-lg border font-medium transition cursor-pointer flex items-center space-x-1.5 ${
+                      enabledOptionalActors.hedge_fund || activeScenarioId === 'hedge-fund-repo-treasury'
+                        ? 'bg-orange-50 text-orange-900 border-orange-300 font-semibold'
+                        : 'bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-100'
+                    }`}
+                  >
+                    <span>{enabledOptionalActors.hedge_fund || activeScenarioId === 'hedge-fund-repo-treasury' ? '✓ Active' : '+ Add'} Global Macro Hedge Fund</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
