@@ -1,0 +1,6 @@
+{
+  "name": "Monetary System Mechanics Simulator",
+  "description": "An interactive visualizer of double-entry monetary accounting, T-accounts, reserve flows, and balance sheet mechanics across Central Banks, Commercial Banks, Treasury, Pension Funds, and Individuals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
