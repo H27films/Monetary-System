@@ -27,7 +27,7 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
   currentBalanceSheets,
 }) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [localShowExplanation, setLocalShowExplanation] = useState<boolean>(true);
+  const [localShowExplanation, setLocalShowExplanation] = useState<boolean>(false);
   const [localShowStepVectorSummary, setLocalShowStepVectorSummary] = useState<boolean>(false);
 
   const wrapperRef = React.useRef<HTMLDivElement>(null);
@@ -59,8 +59,8 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
 
       if (!wrapperRef.current) return;
       const rect = wrapperRef.current.getBoundingClientRect();
-      // Floating bar appears ONLY when the main big box has completely scrolled above top tabs
-      setShowFloatingBar(rect.bottom <= headerBottom);
+      // Floating bar appears slightly earlier, when the main big box is within 15px of scrolling past top tabs
+      setShowFloatingBar(rect.bottom <= headerBottom + 15);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -95,19 +95,16 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
           className="fixed left-0 right-0 z-40 bg-[#FAF8F5] border-b border-[#E2DDD5] shadow-md transition-all duration-150 animate-in fade-in slide-in-from-top-1"
           style={{ top: `${headerOffset}px` }}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-sans">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-sans">
               {/* Step Indicator & Single-Line Summary */}
-              <div className="flex items-center space-x-2.5 min-w-0">
-                <span className="shrink-0 font-sans font-bold px-2 py-0.5 rounded-md bg-[#1A1A1A] text-white text-[11px]">
-                  Step {activeStepIndex + 1}/{scenario.steps.length}
+              <div className="flex items-center space-x-3 min-w-0">
+                <span className="shrink-0 font-sans font-bold px-2.5 py-1 rounded-md bg-[#1A1A1A] text-white text-xs tracking-wider uppercase">
+                  STEP {activeStepIndex + 1}
                 </span>
                 <div className="min-w-0">
-                  <div className="font-serif font-medium text-sm text-[#1A1A1A] truncate">
-                    {currentStep.title}
-                  </div>
-                  <div className="text-[11px] text-zinc-500 truncate hidden md:block">
-                    {currentStep.subtitle} — {currentStep.description}
+                  <div className="font-serif font-medium text-base sm:text-lg text-[#1A1A1A] truncate">
+                    {currentStep.title.replace(/^Step\s*\d+\s*[:\—\-]\s*/i, '')}
                   </div>
                 </div>
               </div>
@@ -242,11 +239,11 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
                 className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs font-sans font-medium transition cursor-pointer border ${
                   isExpShown
                     ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border-[#E2DDD5]'
-                    : 'bg-amber-100 text-amber-900 border-amber-300'
+                    : 'bg-[#F4F0EA] hover:bg-[#EAE4DC] text-[#1A1A1A] border-[#D8D1C5] shadow-xs'
                 }`}
                 title={isExpShown ? 'Hide Explanation Area' : 'Show Explanation Area'}
               >
-                {isExpShown ? <EyeOff className="w-3.5 h-3.5 text-zinc-600" /> : <Eye className="w-3.5 h-3.5 text-amber-800" />}
+                {isExpShown ? <EyeOff className="w-3.5 h-3.5 text-zinc-600" /> : <Eye className="w-3.5 h-3.5 text-zinc-700" />}
                 <span>{isExpShown ? 'Hide Details' : 'Show Details'}</span>
               </button>
 
@@ -268,16 +265,16 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
 
           {/* Step Progress Timeline Bar */}
           <div>
-            <div className="flex items-center justify-between text-xs font-sans text-zinc-600 mb-2">
-              <span className="font-semibold text-[#1A1A1A]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs font-sans text-zinc-600 mb-2.5">
+              <span className="font-semibold text-[#1A1A1A] shrink-0">
                 Step {activeStepIndex + 1} of {scenario.steps.length}
               </span>
-              <span className="truncate max-w-[240px] text-right font-serif text-[#1A1A1A]">
+              <span className="text-left sm:text-right font-serif text-[#1A1A1A] text-xs sm:text-sm font-medium leading-snug">
                 {currentStep.title}
               </span>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {scenario.steps.map((step, idx) => {
                 const isActive = idx === activeStepIndex;
                 const isPassed = idx < activeStepIndex;
@@ -289,19 +286,19 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
                       setIsPlaying(false);
                       onStepChange(idx);
                     }}
-                    className={`flex flex-col p-2.5 rounded-lg text-left border transition duration-150 cursor-pointer ${
+                    className={`flex flex-col justify-between p-3.5 min-h-[80px] rounded-xl text-left border transition duration-150 cursor-pointer ${
                       isActive
                         ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
                         : isPassed
                         ? 'bg-zinc-100 text-zinc-800 border-zinc-200 hover:border-zinc-400'
-                        : 'bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400'
+                        : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'
                     }`}
                   >
-                    <div className="flex items-center justify-between text-[11px] font-sans font-semibold">
+                    <div className="flex items-center justify-between text-xs font-sans font-semibold mb-1">
                       <span>Step {step.stepNumber}</span>
-                      {isPassed && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+                      {isPassed && <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 ml-1" />}
                     </div>
-                    <span className="text-[11px] font-sans font-medium truncate mt-0.5 opacity-90">
+                    <span className="text-xs font-sans font-medium leading-snug break-words opacity-90">
                       {step.subtitle}
                     </span>
                   </button>
@@ -386,20 +383,7 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
               </div>
 
             </div>
-          ) : (
-            <div className="pt-1 flex justify-between items-center text-xs font-sans text-zinc-500 bg-[#FAF8F5] p-2.5 rounded-lg border border-[#E2DDD5]">
-              <span className="font-medium text-zinc-600 truncate max-w-md">
-                Explanation & Macro Impact area hidden. Step {activeStepIndex + 1}: {currentStep.title}
-              </span>
-              <button
-                onClick={() => toggleExp(true)}
-                className="text-xs font-medium text-[#1A1A1A] hover:text-zinc-700 underline cursor-pointer flex items-center space-x-1 shrink-0"
-              >
-                <Eye className="w-3.5 h-3.5 text-zinc-600" />
-                <span>Show Explanation & Macro Impact</span>
-              </button>
-            </div>
-          )}
+          ) : null}
 
           {/* Embedded Vector Summary when active */}
           {isVectorShown && currentBalanceSheets && (

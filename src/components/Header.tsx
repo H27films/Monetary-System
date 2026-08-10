@@ -67,7 +67,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             
             {/* Website Custom Scenario Dropdown */}
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative z-[100]" ref={dropdownRef}>
               <button
                 onClick={() => setIsScenarioDropdownOpen(!isScenarioDropdownOpen)}
                 className="flex items-center space-x-2 bg-white hover:bg-zinc-50 text-[#1A1A1A] px-3 py-2 rounded-lg border border-[#E2DDD5] shadow-xs transition cursor-pointer text-xs font-serif font-medium"
@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
 
               {isScenarioDropdownOpen && (
-                <div className="absolute right-0 sm:left-0 mt-1.5 w-80 sm:w-96 bg-white border border-[#E2DDD5] rounded-xl shadow-xl z-50 overflow-hidden py-1">
+                <div className="absolute right-0 sm:left-0 mt-1.5 w-80 sm:w-96 bg-white border border-[#E2DDD5] rounded-xl shadow-xl z-[100] overflow-hidden py-1">
                   <div className="px-3 py-1.5 bg-[#FAF8F5] border-b border-[#E2DDD5] text-[10px] font-sans font-semibold uppercase text-zinc-500 tracking-wider flex justify-between items-center">
                     <span>Select Simulator Scenario</span>
                     <span>{scenarios.length} Available</span>

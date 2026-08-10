@@ -44,7 +44,7 @@ export default function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   // Global persistent view toggles
-  const [showExplanation, setShowExplanation] = useState<boolean>(true);
+  const [showExplanation, setShowExplanation] = useState<boolean>(false);
   const [showStepVectorSummary, setShowStepVectorSummary] = useState<boolean>(false);
 
   // Custom sandbox overrides
@@ -159,15 +159,12 @@ export default function App() {
         isCustomInitial={customInitialSheets !== null}
       />
 
-      {/* Top Macro indicators aggregate bar */}
-      <MacroIndicatorsBar stats={displayMacroStats} />
-
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         
         {/* TAB 1: T-ACCOUNTS & STEPPER */}
         {activeTab === 't_accounts' && (
-          <div className="space-y-6">
+          <div className="space-y-10 sm:space-y-12">
             {/* Scenario Narrative & Control Stepper */}
             <ScenarioStepper
               scenario={activeScenario}
@@ -181,17 +178,29 @@ export default function App() {
               currentBalanceSheets={displayBalanceSheets}
             />
 
-            {/* Grid of T-Account Balance Sheets */}
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-4">
-                <h3 className="text-xs font-sans font-semibold text-zinc-600 uppercase tracking-wider">
-                  Live Balance Sheet Ledger Cards ({activeEntityIds.length} Active System Actors)
-                </h3>
-                <span className="text-xs font-serif text-zinc-500 italic">
-                  * Highlighting deltas for Step {activeStepIndex + 1}: Assets | Liabilities | Equity
-                </span>
+            {/* Container Box for Live Balance Sheet Ledger Cards */}
+            <div className="bg-[#FAF8F5] border border-[#E2DDD5] rounded-xl p-6 shadow-sm space-y-6 text-[#1A1A1A]">
+              {/* Header */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-5 border-b border-[#E2DDD5]">
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[10px] font-sans font-semibold uppercase tracking-wider px-2.5 py-0.5 bg-[#1A1A1A] text-[#FAF8F5] rounded-full">
+                      MONETARY SYSTEM LEDGER
+                    </span>
+                    <span className="text-xs font-serif italic text-zinc-600">
+                      {activeEntityIds.length} Active System Actors
+                    </span>
+                  </div>
+                  <h2 className="text-2xl font-serif font-normal text-[#1A1A1A] mt-1 tracking-tight">
+                    Live Balance Sheet Ledger Cards
+                  </h2>
+                  <p className="text-xs font-sans text-zinc-600 mt-1 max-w-2xl leading-relaxed">
+                    Double-entry T-accounts highlighting deltas for Step {activeStepIndex + 1}: Assets | Liabilities | Equity
+                  </p>
+                </div>
               </div>
 
+              {/* Grid of T-Account Balance Sheets */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {activeEntityIds.map((id) => (
                   <TAccountCard
@@ -203,7 +212,7 @@ export default function App() {
               </div>
 
               {/* Optional Participant Actors Control Bar */}
-              <div className="bg-[#FAF8F5] border border-[#E2DDD5] rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-sans mt-6 shadow-xs">
+              <div className="bg-white border border-[#E2DDD5] rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-sans shadow-xs">
                 <div className="flex items-center space-x-2 text-zinc-700 font-medium">
                   <Users className="w-4 h-4 text-zinc-600" />
                   <span>Optional System Participant Actors:</span>
@@ -249,7 +258,7 @@ export default function App() {
 
         {/* TAB 2: VISUAL BALANCE SHEET CHARTS */}
         {activeTab === 'chart' && (
-          <div className="space-y-6">
+          <div className="space-y-10 sm:space-y-12">
             <ScenarioStepper
               scenario={activeScenario}
               activeStepIndex={activeStepIndex}
@@ -268,7 +277,7 @@ export default function App() {
 
         {/* TAB 3: INTER-ENTITY FLOW MAP */}
         {activeTab === 'flow' && (
-          <div className="space-y-6">
+          <div className="space-y-10 sm:space-y-12">
             <ScenarioStepper
               scenario={activeScenario}
               activeStepIndex={activeStepIndex}
@@ -290,7 +299,7 @@ export default function App() {
 
         {/* TAB 4: SANDBOX MODE */}
         {activeTab === 'sandbox' && (
-          <div className="space-y-6">
+          <div className="space-y-10 sm:space-y-12">
             <SandboxBuilder
               currentSheets={sandboxDisplayBalanceSheets}
               onApplyCustomTx={handleApplyCustomSandboxTx}
