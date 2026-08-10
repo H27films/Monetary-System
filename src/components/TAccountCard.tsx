@@ -16,194 +16,166 @@ export const TAccountCard: React.FC<TAccountCardProps> = ({ entity, isFocused })
 
   const isBalanced = Math.abs(totalAssets - totalLiabEquity) < 0.001;
 
-  // Theme color maps
-  const colorStyles: Record<string, { badgeBg: string; text: string; border: string; glow: string }> = {
-    emerald: {
-      badgeBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-      text: 'text-emerald-400',
-      border: 'border-emerald-500/30',
-      glow: 'shadow-emerald-500/10',
-    },
-    blue: {
-      badgeBg: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-      text: 'text-blue-400',
-      border: 'border-blue-500/30',
-      glow: 'shadow-blue-500/10',
-    },
-    indigo: {
-      badgeBg: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30',
-      text: 'text-indigo-400',
-      border: 'border-indigo-500/30',
-      glow: 'shadow-indigo-500/10',
-    },
-    amber: {
-      badgeBg: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-      text: 'text-amber-400',
-      border: 'border-amber-500/30',
-      glow: 'shadow-amber-500/10',
-    },
-    violet: {
-      badgeBg: 'bg-violet-500/10 text-violet-400 border-violet-500/30',
-      text: 'text-violet-400',
-      border: 'border-violet-500/30',
-      glow: 'shadow-violet-500/10',
-    },
-    rose: {
-      badgeBg: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
-      text: 'text-rose-400',
-      border: 'border-rose-500/30',
-      glow: 'shadow-rose-500/10',
-    },
-  };
-
-  const currentTheme = colorStyles[entity.color] || colorStyles.emerald;
-
-  const renderItemRow = (item: AccountItem) => {
+  const renderItemRow = (item: AccountItem, categoryColorClass: string) => {
     const hasDelta = item.delta !== undefined && item.delta !== 0;
     const isPositiveDelta = (item.delta || 0) > 0;
 
     return (
       <div
         key={item.id}
-        className={`group flex items-center justify-between p-2 rounded-lg text-xs transition duration-200 border ${
+        className={`p-2 rounded-lg text-[11px] transition duration-150 border space-y-1.5 ${
           hasDelta
             ? isPositiveDelta
-              ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-200 font-semibold shadow-sm animate-pulse'
-              : 'bg-rose-500/15 border-rose-500/40 text-rose-200 font-semibold shadow-sm animate-pulse'
-            : 'bg-slate-800/40 border-slate-700/40 text-slate-300 hover:bg-slate-800/80 hover:border-slate-600'
+              ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950 font-medium shadow-xs'
+              : 'bg-rose-50/90 border-rose-300 text-rose-950 font-medium shadow-xs'
+            : 'bg-zinc-50/80 border-zinc-200/80 text-zinc-800 hover:bg-zinc-100/80'
         }`}
       >
-        <div className="flex items-center space-x-1.5 min-w-0 pr-2">
-          <span className="truncate">{item.name}</span>
-          {item.detail && (
-            <div className="relative group/tooltip">
-              <Info className="w-3.5 h-3.5 text-slate-500 hover:text-slate-300 cursor-pointer flex-shrink-0" />
-              <div className="absolute left-0 bottom-full mb-2 hidden group-hover/tooltip:block w-48 p-2 bg-slate-900 text-[11px] font-normal text-slate-200 rounded-lg border border-slate-700 shadow-xl z-50 pointer-events-none">
-                {item.detail}
+        {/* Main Line: Item Name & Amount */}
+        <div className="flex items-start justify-between gap-1">
+          <div className="flex items-center space-x-1 min-w-0 flex-1">
+            <span className="font-sans font-medium text-[11px] leading-tight text-zinc-900 break-words">
+              {item.name}
+            </span>
+            {item.detail && (
+              <div className="relative group/tooltip shrink-0">
+                <Info className="w-3 h-3 text-zinc-400 hover:text-zinc-700 cursor-pointer" />
+                <div className="absolute left-0 bottom-full mb-1.5 hidden group-hover/tooltip:block w-44 p-2 bg-[#1A1A1A] text-[10px] font-sans text-zinc-200 rounded-md shadow-xl z-50 pointer-events-none">
+                  {item.detail}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+
+          <span className="font-mono font-semibold text-[11px] text-[#1A1A1A] shrink-0">
+            {formatCurrency(item.amount)}
+          </span>
         </div>
 
-        <div className="flex items-center space-x-2 flex-shrink-0 font-mono">
-          {hasDelta && (
+        {/* Change Box: Placed JUST BELOW the line item */}
+        {hasDelta && (
+          <div className="flex items-center justify-start pt-0.5">
             <span
-              className={`flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded ${
+              className={`inline-flex items-center text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded border ${
                 isPositiveDelta
-                  ? 'bg-emerald-500/20 text-emerald-300'
-                  : 'bg-rose-500/20 text-rose-300'
+                  ? 'bg-emerald-100/90 text-emerald-900 border-emerald-300'
+                  : 'bg-rose-100/90 text-rose-900 border-rose-300'
               }`}
             >
               {isPositiveDelta ? (
-                <ArrowUpRight className="w-3 h-3 mr-0.5" />
+                <ArrowUpRight className="w-3 h-3 mr-0.5 text-emerald-700 shrink-0" />
               ) : (
-                <ArrowDownRight className="w-3 h-3 mr-0.5" />
+                <ArrowDownRight className="w-3 h-3 mr-0.5 text-rose-700 shrink-0" />
               )}
               {isPositiveDelta ? '+' : ''}
-              {item.delta}B
+              {formatCurrency(item.delta || 0)}
             </span>
-          )}
-          <span className="font-bold">{formatCurrency(item.amount)}</span>
-        </div>
+          </div>
+        )}
       </div>
     );
   };
 
   return (
     <div
-      className={`bg-slate-900 border rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
+      className={`bg-white border rounded-xl shadow-xs transition-all duration-200 overflow-hidden flex flex-col h-full ${
         isFocused
-          ? `border-2 ${currentTheme.border} ${currentTheme.glow} ring-2 ring-emerald-500/30 scale-[1.01]`
-          : 'border-slate-800 hover:border-slate-700'
+          ? 'border-[#1A1A1A] ring-2 ring-zinc-300 shadow-md'
+          : 'border-[#E2DDD5] hover:border-zinc-400'
       }`}
     >
-      {/* Entity Header */}
-      <div className="p-4 bg-slate-950/80 border-b border-slate-800 flex items-start justify-between gap-3">
+      {/* Entity Card Header */}
+      <div className="p-3.5 bg-[#FAF8F5] border-b border-[#E2DDD5] flex items-start justify-between gap-2 shrink-0">
         <div>
-          <div className="flex items-center space-x-2">
-            <h2 className="text-sm font-bold text-slate-100 tracking-tight">
-              {entity.name}
-            </h2>
-          </div>
-          <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">{entity.description}</p>
+          <h3 className="text-base font-serif font-medium text-[#1A1A1A] tracking-tight">
+            {entity.name}
+          </h3>
+          <p className="text-xs font-sans text-zinc-500 mt-0.5 line-clamp-1">{entity.description}</p>
         </div>
 
-        <span className={`text-[10px] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-full border ${currentTheme.badgeBg} shrink-0`}>
+        <span className="text-[10px] font-sans font-medium tracking-wide uppercase px-2.5 py-1 bg-zinc-900 text-white rounded-md shrink-0">
           {entity.badgeText}
         </span>
       </div>
 
-      {/* T-Account Header Bar */}
-      <div className="grid grid-cols-2 bg-slate-950 border-b border-slate-800 text-[11px] font-bold tracking-wider uppercase">
-        <div className="py-2 px-3 text-emerald-400 border-r border-slate-800 flex items-center justify-between">
-          <span>ASSETS (DEBIT)</span>
-          <span className="font-mono text-slate-300">{formatCurrency(totalAssets)}</span>
+      {/* 3-Column T-Account Header: Assets | Liabilities | Equity */}
+      <div className="grid grid-cols-3 bg-[#1A1A1A] text-white text-[10px] font-sans font-medium tracking-wider uppercase border-b border-[#1A1A1A] shrink-0">
+        <div className="py-2 px-2.5 border-r border-zinc-700 flex flex-col sm:flex-row sm:items-center justify-between text-zinc-200">
+          <span className="text-zinc-300">1. ASSETS</span>
+          <span className="font-mono text-white font-semibold">{formatCurrency(totalAssets)}</span>
         </div>
-        <div className="py-2 px-3 text-blue-400 flex items-center justify-between">
-          <span>LIABILITIES & EQUITY (CREDIT)</span>
-          <span className="font-mono text-slate-300">{formatCurrency(totalLiabEquity)}</span>
+        <div className="py-2 px-2.5 border-r border-zinc-700 flex flex-col sm:flex-row sm:items-center justify-between text-rose-300">
+          <span className="text-rose-300">2. LIABILITIES</span>
+          <span className="font-mono text-white font-semibold">{formatCurrency(totalLiabilities)}</span>
+        </div>
+        <div className="py-2 px-2.5 flex flex-col sm:flex-row sm:items-center justify-between text-amber-200">
+          <span className="text-amber-200">3. EQUITY</span>
+          <span className="font-mono text-white font-semibold">{formatCurrency(totalEquity)}</span>
         </div>
       </div>
 
-      {/* T-Account Body: Left vs Right columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-800/80 min-h-[160px]">
-        {/* Left Side: Assets */}
-        <div className="p-3 space-y-2 bg-slate-900/50">
-          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
-            Owned Assets (+)
+      {/* 3-Column T-Account Body: Assets (Col 1) | Liabilities (Col 2) | Equity (Col 3) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#E2DDD5] min-h-[160px] bg-white text-xs flex-1">
+        
+        {/* Column 1: Assets */}
+        <div className="p-3 space-y-2 bg-[#FAF8F5]/30">
+          <div className="text-[10px] font-sans font-semibold text-zinc-500 uppercase tracking-wider pb-1 border-b border-zinc-200/80 flex justify-between items-center">
+            <span>OWNED ASSETS</span>
+            <span className="text-[9px] font-mono font-medium text-zinc-400">Debit (+)</span>
           </div>
           {entity.assets.length === 0 ? (
-            <div className="text-xs text-slate-600 italic p-2 text-center">No assets listed</div>
+            <div className="text-xs font-sans text-zinc-400 italic p-2 text-center">No assets</div>
           ) : (
-            entity.assets.map(renderItemRow)
+            entity.assets.map((item) => renderItemRow(item, 'emerald'))
           )}
         </div>
 
-        {/* Right Side: Liabilities & Equity */}
-        <div className="p-3 space-y-3 bg-slate-900/50">
-          {/* Liabilities */}
-          <div className="space-y-1.5">
-            <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
-              Owed Liabilities (-)
-            </div>
-            {entity.liabilities.length === 0 ? (
-              <div className="text-xs text-slate-600 italic p-2 text-center">No liabilities</div>
-            ) : (
-              entity.liabilities.map(renderItemRow)
-            )}
+        {/* Column 2: Liabilities */}
+        <div className="p-3 space-y-2 bg-white">
+          <div className="text-[10px] font-sans font-semibold text-rose-800 uppercase tracking-wider pb-1 border-b border-zinc-200/80 flex justify-between items-center">
+            <span>OWED LIABILITIES</span>
+            <span className="text-[9px] font-mono font-medium text-zinc-400">Credit (-)</span>
           </div>
-
-          {/* Equity */}
-          {entity.equity.length > 0 && (
-            <div className="space-y-1.5 pt-2 border-t border-slate-800/60">
-              <div className="text-[10px] font-semibold text-amber-500/80 uppercase tracking-wider mb-1">
-                Net Worth & Equity Capital
-              </div>
-              {entity.equity.map(renderItemRow)}
-            </div>
+          {entity.liabilities.length === 0 ? (
+            <div className="text-xs font-sans text-zinc-400 italic p-2 text-center">No liabilities</div>
+          ) : (
+            entity.liabilities.map((item) => renderItemRow(item, 'rose'))
           )}
         </div>
+
+        {/* Column 3: Equity */}
+        <div className="p-3 space-y-2 bg-[#FAF8F5]/30">
+          <div className="text-[10px] font-sans font-semibold text-amber-800 uppercase tracking-wider pb-1 border-b border-zinc-200/80 flex justify-between items-center">
+            <span>NET CAPITAL</span>
+          </div>
+          {entity.equity.length === 0 ? (
+            <div className="text-xs font-sans text-zinc-400 italic p-2 text-center">Zero equity</div>
+          ) : (
+            entity.equity.map((item) => renderItemRow(item, 'amber'))
+          )}
+        </div>
+
       </div>
 
-      {/* Footer: Balance Verification */}
-      <div className="p-2.5 bg-slate-950/90 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
-        <div className="flex items-center space-x-1.5 text-slate-400">
+      {/* Card Footer: Ledger Identity Verification */}
+      <div className="p-2.5 bg-[#FAF8F5] border-t border-[#E2DDD5] flex items-center justify-between text-xs font-sans text-[#1A1A1A] mt-auto shrink-0">
+        <div className="flex items-center space-x-1.5 text-zinc-600">
           <Scale className="w-3.5 h-3.5" />
-          <span className="text-[11px]">Ledger Check:</span>
+          <span className="text-[10px] font-medium uppercase tracking-wider">BALANCE IDENTITY:</span>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <span className="text-[11px] text-slate-400">
+        <div className="flex items-center space-x-2">
+          <span className="text-[11px] font-mono font-medium text-zinc-700">
             {formatCurrency(totalAssets)} = {formatCurrency(totalLiabilities)} + {formatCurrency(totalEquity)}
           </span>
           <span
-            className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+            className={`text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full border ${
               isBalanced
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                : 'bg-rose-500/10 text-rose-400 border-rose-500/30'
+                ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                : 'bg-rose-50 text-rose-800 border-rose-200'
             }`}
           >
-            {isBalanced ? 'BALANCED' : 'IMBALANCE'}
+            {isBalanced ? 'Balanced' : 'Imbalance'}
           </span>
         </div>
       </div>

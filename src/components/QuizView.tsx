@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, CheckCircle, XCircle, HelpCircle, ArrowRight } from 'lucide-react';
+import { BookOpen, CheckCircle, XCircle } from 'lucide-react';
 
 interface Question {
   id: number;
@@ -87,13 +87,13 @@ export const QuizView: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6 text-slate-100">
-      <div className="border-b border-slate-800 pb-4">
-        <h2 className="text-lg font-extrabold tracking-tight text-white flex items-center space-x-2">
-          <BookOpen className="w-5 h-5 text-amber-400" />
-          <span>Monetary Mechanics Knowledge Challenge</span>
+    <div className="bg-white border-2 border-[#141414] p-6 shadow-[4px_4px_0px_0px_#141414] space-y-6 text-[#141414]">
+      <div className="border-b-2 border-[#141414] pb-4">
+        <h2 className="text-lg font-black uppercase tracking-tight text-[#141414] flex items-center space-x-2">
+          <BookOpen className="w-5 h-5 text-[#141414]" />
+          <span>MONETARY MECHANICS KNOWLEDGE CHALLENGE</span>
         </h2>
-        <p className="text-xs text-slate-400 mt-0.5">
+        <p className="text-xs font-mono text-zinc-600 mt-0.5">
           Test your understanding of double-entry T-accounts, central bank reserves, TGA flows, and money creation.
         </p>
       </div>
@@ -107,29 +107,29 @@ export const QuizView: React.FC = () => {
           return (
             <div
               key={q.id}
-              className="bg-slate-950/80 border border-slate-800 rounded-xl p-5 space-y-3 shadow-md"
+              className="bg-zinc-50 border-2 border-[#141414] p-5 space-y-3 shadow-[2px_2px_0px_0px_#141414]"
             >
               <div className="flex items-start space-x-3">
-                <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                <span className="text-xs font-mono font-bold px-2.5 py-1 bg-[#141414] text-white">
                   Q{idx + 1}
                 </span>
-                <h3 className="text-sm font-semibold text-slate-200 leading-snug">
+                <h3 className="text-sm font-black uppercase text-[#141414] leading-snug">
                   {q.question}
                 </h3>
               </div>
 
               {/* Option List */}
-              <div className="space-y-2 pt-1">
+              <div className="space-y-2 pt-1 font-mono text-xs">
                 {q.options.map((opt, oIdx) => {
-                  let optStyle = 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700';
+                  let optStyle = 'bg-white border-2 border-[#141414] text-[#141414] hover:bg-zinc-100';
 
                   if (isAnswered) {
                     if (oIdx === q.correctIndex) {
-                      optStyle = 'bg-emerald-500/20 border-emerald-500 text-emerald-200 font-semibold';
+                      optStyle = 'bg-emerald-200 border-2 border-[#141414] text-[#141414] font-bold';
                     } else if (selected === oIdx) {
-                      optStyle = 'bg-rose-500/20 border-rose-500 text-rose-200';
+                      optStyle = 'bg-rose-200 border-2 border-[#141414] text-[#141414]';
                     } else {
-                      optStyle = 'bg-slate-900/40 border-slate-800 text-slate-500 opacity-60';
+                      optStyle = 'bg-zinc-100 border border-zinc-300 text-zinc-400';
                     }
                   }
 
@@ -138,12 +138,12 @@ export const QuizView: React.FC = () => {
                       key={oIdx}
                       disabled={isAnswered}
                       onClick={() => handleSelect(q.id, oIdx)}
-                      className={`w-full text-left p-3 rounded-xl text-xs border transition duration-200 flex items-start space-x-2 cursor-pointer ${optStyle}`}
+                      className={`w-full text-left p-3 text-xs border-2 transition duration-150 flex items-start space-x-2 cursor-pointer ${optStyle}`}
                     >
-                      <span className="font-bold opacity-70 shrink-0">
+                      <span className="font-bold shrink-0">
                         {String.fromCharCode(65 + oIdx)}.
                       </span>
-                      <span className="leading-relaxed">{opt}</span>
+                      <span className="leading-relaxed font-sans font-medium">{opt}</span>
                     </button>
                   );
                 })}
@@ -152,21 +152,21 @@ export const QuizView: React.FC = () => {
               {/* Explanation Box */}
               {isAnswered && (
                 <div
-                  className={`p-3 rounded-xl border text-xs space-y-1 ${
+                  className={`p-3 border-2 border-[#141414] text-xs font-mono space-y-1 ${
                     isCorrect
-                      ? 'bg-emerald-950/50 border-emerald-800 text-emerald-300'
-                      : 'bg-rose-950/50 border-rose-800 text-rose-300'
+                      ? 'bg-emerald-100 text-emerald-950'
+                      : 'bg-rose-100 text-rose-950'
                   }`}
                 >
-                  <div className="flex items-center space-x-1.5 font-bold">
+                  <div className="flex items-center space-x-1.5 font-bold uppercase">
                     {isCorrect ? (
-                      <CheckCircle className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle className="w-4 h-4 text-emerald-700" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-rose-400" />
+                      <XCircle className="w-4 h-4 text-rose-700" />
                     )}
-                    <span>{isCorrect ? 'Correct!' : 'Incorrect'}</span>
+                    <span>{isCorrect ? 'CORRECT!' : 'INCORRECT'}</span>
                   </div>
-                  <p className="leading-relaxed text-[11px] opacity-90">{q.explanation}</p>
+                  <p className="leading-relaxed text-[11px] font-sans font-medium">{q.explanation}</p>
                 </div>
               )}
             </div>

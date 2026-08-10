@@ -1,97 +1,128 @@
 import React from 'react';
-import { JournalEntry, EntityId } from '../types/monetary';
+import { JournalEntry, EntityBalanceSheet } from '../types/monetary';
 import { formatCurrency } from '../utils/monetaryEngine';
-import { FileText, ArrowRightLeft } from 'lucide-react';
+import { FileText, ArrowRight } from 'lucide-react';
 
 interface JournalLogViewProps {
-  entries: JournalEntry[];
-  entityNames: Record<EntityId, string>;
+  journals: JournalEntry[];
+  entities: Record<string, EntityBalanceSheet>;
 }
 
-export const JournalLogView: React.FC<JournalLogViewProps> = ({ entries, entityNames }) => {
+export const JournalLogView: React.FC<JournalLogViewProps> = ({ journals, entities }) => {
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6 text-slate-100">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+    <div className="bg-white border border-[#E2DDD5] rounded-xl p-6 shadow-xs space-y-6 text-[#1A1A1A]">
+      <div className="flex items-center justify-between border-b border-[#E2DDD5] pb-4">
         <div>
-          <h2 className="text-lg font-extrabold tracking-tight text-white flex items-center space-x-2">
-            <FileText className="w-5 h-5 text-blue-400" />
-            <span>Double-Entry General Ledger Journal</span>
+          <h2 className="text-xl font-serif font-normal tracking-tight text-[#1A1A1A] flex items-center space-x-2">
+            <FileText className="w-5 h-5 text-[#1A1A1A]" />
+            <span>Double-Entry General Audit Ledger Journal</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Audit log of all Debit and Credit accounting postings across entity ledgers for each step.
+          <p className="text-xs font-sans text-zinc-500 mt-0.5">
+            Immutable chronological accounting record of all Debit and Credit line items applied across balance sheets.
           </p>
         </div>
-        <span className="text-xs font-mono font-semibold px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full">
-          {entries.length} Transaction Records
+
+        <span className="text-xs font-sans font-medium px-3 py-1 bg-zinc-100 text-zinc-800 border border-zinc-200 rounded-full">
+          {journals.length} Journal Batch{journals.length === 1 ? '' : 'es'}
         </span>
       </div>
 
-      {entries.length === 0 ? (
-        <div className="bg-slate-950 p-8 rounded-xl border border-slate-800 text-center text-slate-500 text-xs">
-          No double-entry journal entries recorded yet.
+      {journals.length === 0 ? (
+        <div className="bg-[#FAF8F5] rounded-xl p-8 border border-[#E2DDD5] text-center space-y-2">
+          <p className="text-sm font-serif text-[#1A1A1A]">No accounting journal entries generated yet.</p>
+          <p className="text-xs font-sans text-zinc-500">
+            Step through the scenarios or use the Sandbox Engine to create accounting transactions.
+          </p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {entries.map((j) => (
-            <div
-              key={j.id}
-              className="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-3 shadow-md"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2 border-b border-slate-800/80">
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">
-                    Step {j.stepNumber}
+        <div className="space-y-6">
+          {journals.map((journal) => {
+            const totalDebit = journal.entries
+              .filter((e) => e.type === 'debit')
+              .reduce((sum, e) => sum + e.amount, 0);
+            const totalCredit = journal.entries
+              .filter((e) => e.type === 'credit')
+              .reduce((sum, e) => sum + e.amount, 0);
+
+            return (
+              <div
+                key={journal.id}
+                className="bg-[#FAF8F5] border border-[#E2DDD5] rounded-xl p-5 space-y-4 shadow-xs"
+              >
+                {/* Entry Batch Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E2DDD5] pb-3">
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[10px] font-sans font-semibold uppercase px-2 py-0.5 bg-[#1A1A1A] text-white rounded-md">
+                        Step {journal.stepNumber}
+                      </span>
+                      <h3 className="text-base font-serif font-medium text-[#1A1A1A]">
+                        {journal.title}
+                      </h3>
+                    </div>
+                    <p className="text-xs font-sans text-zinc-600 mt-0.5">{journal.description}</p>
+                  </div>
+
+                  <span className="text-[10px] font-mono text-zinc-400 shrink-0">
+                    {journal.timestamp}
                   </span>
-                  <h3 className="text-sm font-bold text-slate-200">{j.title}</h3>
                 </div>
-                <span className="text-[11px] font-mono text-slate-500">{j.timestamp}</span>
-              </div>
 
-              <p className="text-xs text-slate-400 italic">{j.description}</p>
+                {/* Journal Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left font-sans text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-[#E2DDD5] text-zinc-500 font-semibold uppercase text-[10px]">
+                        <th className="py-2 px-3">Participant Entity</th>
+                        <th className="py-2 px-3">Account Name</th>
+                        <th className="py-2 px-3">Category</th>
+                        <th className="py-2 px-3 text-right">Debit (+)</th>
+                        <th className="py-2 px-3 text-right">Credit (-)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#E2DDD5]/60 bg-white">
+                      {journal.entries.map((entry, idx) => {
+                        const entityName = entities[entry.entityId]?.name || entry.entityId;
+                        const isDebit = entry.type === 'debit';
 
-              {/* Journal Table */}
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs font-mono">
-                  <thead>
-                    <tr className="text-slate-500 border-b border-slate-800 text-[10px] uppercase tracking-wider">
-                      <th className="py-2 px-2">Entity Ledger</th>
-                      <th className="py-2 px-2">Account Name</th>
-                      <th className="py-2 px-2">Posting Type</th>
-                      <th className="py-2 px-2 text-right">Debit ($B)</th>
-                      <th className="py-2 px-2 text-right">Credit ($B)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800/60 text-slate-300">
-                    {j.entries.map((row, idx) => (
-                      <tr key={idx} className="hover:bg-slate-900/60">
-                        <td className="py-2 px-2 font-semibold text-slate-200">
-                          {entityNames[row.entityId] || row.entityId}
+                        return (
+                          <tr key={idx} className="hover:bg-zinc-50/80 transition">
+                            <td className="py-2 px-3 font-serif font-medium text-[#1A1A1A]">{entityName}</td>
+                            <td className="py-2 px-3 font-sans text-zinc-800">
+                              <span className={isDebit ? 'font-medium text-[#1A1A1A]' : 'pl-4 text-zinc-600'}>
+                                {entry.accountName}
+                              </span>
+                            </td>
+                            <td className="py-2 px-3 text-zinc-500 capitalize">{entry.category}</td>
+                            <td className="py-2 px-3 text-right font-mono font-medium text-[#1A1A1A]">
+                              {isDebit ? formatCurrency(entry.amount) : '—'}
+                            </td>
+                            <td className="py-2 px-3 text-right font-mono font-medium text-zinc-700">
+                              {!isDebit ? formatCurrency(entry.amount) : '—'}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                    <tfoot>
+                      <tr className="border-t border-[#E2DDD5] bg-[#FAF8F5] font-sans font-semibold text-xs text-[#1A1A1A]">
+                        <td colSpan={3} className="py-2.5 px-3 uppercase tracking-wider text-[10px] text-zinc-500">
+                          Total Ledger Verification:
                         </td>
-                        <td className="py-2 px-2">{row.accountName}</td>
-                        <td className="py-2 px-2 uppercase text-[10px]">
-                          <span
-                            className={`px-1.5 py-0.5 rounded font-bold ${
-                              row.type === 'debit'
-                                ? 'bg-emerald-500/10 text-emerald-400'
-                                : 'bg-blue-500/10 text-blue-400'
-                            }`}
-                          >
-                            {row.type}
-                          </span>
+                        <td className="py-2.5 px-3 text-right font-mono font-bold text-emerald-800">
+                          {formatCurrency(totalDebit)}
                         </td>
-                        <td className="py-2 px-2 text-right font-bold text-emerald-400">
-                          {row.type === 'debit' ? formatCurrency(row.amount) : '-'}
-                        </td>
-                        <td className="py-2 px-2 text-right font-bold text-blue-400">
-                          {row.type === 'credit' ? formatCurrency(row.amount) : '-'}
+                        <td className="py-2.5 px-3 text-right font-mono font-bold text-emerald-800">
+                          {formatCurrency(totalCredit)}
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </tfoot>
+                  </table>
+                </div>
+
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

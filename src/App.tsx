@@ -11,17 +11,29 @@ import { ScenarioStepper } from './components/ScenarioStepper';
 import { EntityFlowDiagram } from './components/EntityFlowDiagram';
 import { SandboxBuilder } from './components/SandboxBuilder';
 import { JournalLogView } from './components/JournalLogView';
-import { QuizView } from './components/QuizView';
+import { BalanceChartView } from './components/BalanceChartView';
 import { AiExplainerModal } from './components/AiExplainerModal';
+import { SettingsModal } from './components/SettingsModal';
 
 import { scenarios } from './data/scenarios';
-import { calculateCurrentState } from './utils/monetaryEngine';
+import { createDefaultInitialState } from './data/initialStates';
+import { calculateCurrentState, getCleanInitialState } from './utils/monetaryEngine';
 import { EntityId, EntityBalanceSheet, MonetaryStep, JournalEntry } from './types/monetary';
 
 export default function App() {
   const [activeScenarioId, setActiveScenarioId] = useState<string>(scenarios[0].id);
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
-  const [activeTab, setActiveTab] = useState<'t_accounts' | 'flow' | 'sandbox' | 'journal' | 'quiz' | 'ai'>('t_accounts');
+  const [activeTab, setActiveTab] = useState<'t_accounts' | 'flow' | 'sandbox' | 'journal' | 'chart' | 'ai'>('t_accounts');
+
+  // Custom initial balances state override
+  const [customInitialSheets, setCustomInitialSheets] = useState<Record<EntityId, EntityBalanceSheet> | null>(null);
+
+  // Settings modal open state
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+
+  // Global persistent view toggles
+  const [showExplanation, setShowExplanation] = useState<boolean>(true);
+  const [showStepVectorSummary, setShowStepVectorSummary] = useState<boolean>(false);
 
   // Custom sandbox overrides
   const [sandboxState, setSandboxState] = useState<{
@@ -38,30 +50,31 @@ export default function App() {
     return scenarios.find((s) => s.id === activeScenarioId) || scenarios[0];
   }, [activeScenarioId]);
 
+  // Determine effective initial state (custom vs default)
+  const effectiveInitialState = useMemo(() => {
+    return customInitialSheets || activeScenario.initialState;
+  }, [customInitialSheets, activeScenario]);
+
   // Compute calculated balance sheet & macro indicators for active scenario & step
   const calculatedState = useMemo(() => {
     return calculateCurrentState(
-      activeScenario.initialState,
+      effectiveInitialState,
       activeScenario.steps,
       activeStepIndex
     );
-  }, [activeScenario, activeStepIndex]);
+  }, [effectiveInitialState, activeScenario, activeStepIndex]);
+
+  // Clean starting state for fresh Sandbox mode
+  const cleanInitialSheets = useMemo(() => {
+    return getCleanInitialState(effectiveInitialState);
+  }, [effectiveInitialState]);
 
   // Determine active display balance sheets
   const displayBalanceSheets = sandboxState.balanceSheets || calculatedState.currentBalanceSheets;
+  const sandboxDisplayBalanceSheets = sandboxState.balanceSheets || cleanInitialSheets;
   const displayMacroStats = calculatedState.macroStats;
 
   const currentStep = activeScenario.steps[activeStepIndex] || activeScenario.steps[0];
-
-  // Map of entity IDs to short human names
-  const entityNamesMap: Record<EntityId, string> = {
-    central_bank: 'Central Bank (Fed)',
-    bank_a: 'Bank A (Primary Dealer)',
-    bank_b: 'Bank B (Commercial)',
-    pension_fund: 'Pension Fund',
-    individual: 'Private Individual',
-    treasury: 'US Treasury (TGA)',
-  };
 
   const handleSelectScenario = (id: string) => {
     setActiveScenarioId(id);
@@ -81,8 +94,7 @@ export default function App() {
 
   const handleApplyCustomSandboxTx = (
     updatedSheets: Record<EntityId, EntityBalanceSheet>,
-    journal: JournalEntry,
-    txDesc: string
+    journal: JournalEntry
   ) => {
     setSandboxState((prev) => ({
       balanceSheets: updatedSheets,
@@ -100,7 +112,7 @@ export default function App() {
   }, [activeScenario, activeStepIndex, sandboxState.customJournals]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-emerald-500 selection:text-slate-950 flex flex-col">
+    <div className="min-h-screen bg-[#FAF8F5] text-[#1A1A1A] font-sans flex flex-col selection:bg-[#1A1A1A] selection:text-white">
       {/* Top Navbar */}
       <Header
         scenarios={scenarios}
@@ -109,6 +121,8 @@ export default function App() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onReset={handleReset}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        isCustomInitial={customInitialSheets !== null}
       />
 
       {/* Top Macro indicators aggregate bar */}
@@ -126,20 +140,26 @@ export default function App() {
               activeStepIndex={activeStepIndex}
               onStepChange={setActiveStepIndex}
               onAskAiForStep={handleAskAiForStep}
+              showExplanation={showExplanation}
+              onToggleExplanation={setShowExplanation}
+              showStepVectorSummary={showStepVectorSummary}
+              onToggleStepVectorSummary={setShowStepVectorSummary}
+              currentBalanceSheets={displayBalanceSheets}
             />
 
-            {/* Grid of 6 T-Account Balance Sheets */}
+            {/* Grid of 6 T-Account Balance Sheets (2 accounts per row, 3 rows) */}
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider">
+              <div className="flex items-center justify-between gap-2 mb-4">
+                <h3 className="text-xs font-sans font-semibold text-zinc-600 uppercase tracking-wider">
                   Live Balance Sheet Ledger Cards (Double-Entry T-Accounts)
                 </h3>
-                <span className="text-xs text-slate-500 italic">
-                  * Green/Red badges highlight deltas for Step {activeStepIndex + 1}
+                <span className="text-xs font-serif text-zinc-500 italic">
+                  * Highlighting deltas for Step {activeStepIndex + 1}: Assets | Liabilities | Equity
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {/* Layout constraint requested: 2 accounts per row, 3 rows */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <TAccountCard
                   entity={displayBalanceSheets.central_bank}
                   isFocused={Object.keys(currentStep.entityDeltas.central_bank || {}).length > 0}
@@ -169,7 +189,26 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 2: INTER-ENTITY FLOW MAP */}
+        {/* TAB 2: VISUAL BALANCE SHEET CHARTS */}
+        {activeTab === 'chart' && (
+          <div className="space-y-6">
+            <ScenarioStepper
+              scenario={activeScenario}
+              activeStepIndex={activeStepIndex}
+              onStepChange={setActiveStepIndex}
+              onAskAiForStep={handleAskAiForStep}
+              showExplanation={showExplanation}
+              onToggleExplanation={setShowExplanation}
+              showStepVectorSummary={showStepVectorSummary}
+              onToggleStepVectorSummary={setShowStepVectorSummary}
+              currentBalanceSheets={displayBalanceSheets}
+            />
+
+            <BalanceChartView balanceSheets={displayBalanceSheets} />
+          </div>
+        )}
+
+        {/* TAB 3: INTER-ENTITY FLOW MAP */}
         {activeTab === 'flow' && (
           <div className="space-y-6">
             <ScenarioStepper
@@ -177,6 +216,11 @@ export default function App() {
               activeStepIndex={activeStepIndex}
               onStepChange={setActiveStepIndex}
               onAskAiForStep={handleAskAiForStep}
+              showExplanation={showExplanation}
+              onToggleExplanation={setShowExplanation}
+              showStepVectorSummary={showStepVectorSummary}
+              onToggleStepVectorSummary={setShowStepVectorSummary}
+              currentBalanceSheets={displayBalanceSheets}
             />
 
             <EntityFlowDiagram
@@ -186,48 +230,59 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 3: SANDBOX MODE */}
+        {/* TAB 4: SANDBOX MODE */}
         {activeTab === 'sandbox' && (
           <div className="space-y-6">
             <SandboxBuilder
-              initialState={activeScenario.initialState}
-              onApplyCustomTransaction={handleApplyCustomSandboxTx}
+              currentSheets={sandboxDisplayBalanceSheets}
+              onApplyCustomTx={handleApplyCustomSandboxTx}
               onResetSandbox={() => setSandboxState({ balanceSheets: null, customJournals: [] })}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {(Object.values(displayBalanceSheets) as EntityBalanceSheet[]).map((sheet) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {(Object.values(sandboxDisplayBalanceSheets) as EntityBalanceSheet[]).map((sheet) => (
                 <TAccountCard key={sheet.id} entity={sheet} />
               ))}
             </div>
           </div>
         )}
 
-        {/* TAB 4: AUDIT JOURNAL LOG */}
+        {/* TAB 5: AUDIT JOURNAL LOG */}
         {activeTab === 'journal' && (
-          <JournalLogView entries={allJournals} entityNames={entityNamesMap} />
+          <JournalLogView journals={allJournals} entities={displayBalanceSheets} />
         )}
-
-        {/* TAB 5: MECHANICS QUIZ */}
-        {activeTab === 'quiz' && <QuizView />}
 
         {/* TAB 6: ASK AI ECONOMIST */}
         {activeTab === 'ai' && (
           <AiExplainerModal
-            initialQuestion={aiQuestion}
-            contextData={{
-              activeScenarioTitle: activeScenario.title,
-              activeStepTitle: currentStep.title,
-              macroStats: displayMacroStats,
-            }}
+            initialQuery={aiQuestion}
+            currentStep={currentStep}
+            currentBalanceSheets={displayBalanceSheets}
           />
         )}
 
       </main>
 
+      {/* Settings Modal for Starting Balances */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        initialSheets={effectiveInitialState}
+        onSaveInitialSheets={(updated) => {
+          setCustomInitialSheets(updated);
+          setActiveStepIndex(0);
+          setSandboxState({ balanceSheets: null, customJournals: [] });
+        }}
+        onResetToDefault={() => {
+          setCustomInitialSheets(null);
+          setActiveStepIndex(0);
+          setSandboxState({ balanceSheets: null, customJournals: [] });
+        }}
+      />
+
       {/* Footer */}
-      <footer className="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500 mt-auto">
-        <div className="max-w-7xl mx-auto px-4">
+      <footer className="bg-white border-t border-[#E2DDD5] py-4 text-center text-xs font-sans text-zinc-500 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 font-serif">
           Monetary System Mechanics Simulator • Double-Entry T-Accounts, Central Bank Reserves & TGA Fiscal Engine
         </div>
       </footer>

@@ -1,6 +1,21 @@
 import { EntityId, EntityBalanceSheet, MonetaryStep, SystemMacroStats, AccountItem } from '../types/monetary';
 
 /**
+ * Returns a clean copy of initial balance sheets with all deltas zeroed out.
+ */
+export const getCleanInitialState = (
+  initialState: Record<EntityId, EntityBalanceSheet>
+): Record<EntityId, EntityBalanceSheet> => {
+  const currentSheets: Record<EntityId, EntityBalanceSheet> = JSON.parse(JSON.stringify(initialState));
+  Object.values(currentSheets).forEach((sheet) => {
+    sheet.assets.forEach((item) => (item.delta = 0));
+    sheet.liabilities.forEach((item) => (item.delta = 0));
+    sheet.equity.forEach((item) => (item.delta = 0));
+  });
+  return currentSheets;
+};
+
+/**
  * Calculates current balance sheets by applying deltas up to the selected step.
  */
 export const calculateCurrentState = (
@@ -134,5 +149,5 @@ export const calculateCurrentState = (
 };
 
 export const formatCurrency = (amount: number): string => {
-  return `$${amount.toLocaleString()}B`;
+  return `$${amount.toLocaleString()}`;
 };
