@@ -116,7 +116,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       getAmount('bank_a', 'assets', 'ba_treasuries') +
       getAmount('bank_b', 'assets', 'bb_treasuries') +
       getAmount('pension_fund', 'assets', 'pf_treasuries') +
-      getAmount('individual', 'assets', 'ind_treasuries');
+      getAmount('individual', 'assets', 'ind_treasuries') +
+      getAmount('corporation', 'assets', 'corp_treasuries') +
+      getAmount('hedge_fund', 'assets', 'hf_treasuries');
 
     setAmount('treasury', 'liabilities', 'tr_debt_issued', totalTreasuryHoldings);
 
