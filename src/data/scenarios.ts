@@ -20,7 +20,7 @@ export const scenarios: Scenario[] = [
         macroImpact: {
           m0Change: 'Unchanged ($1,100)',
           m1Change: 'Unchanged ($1,350)',
-          tgaChange: '+$100 ($300)',
+          tgaChange: '+$100 ($1,100)',
           keyTakeaway: 'Bond purchases by primary dealers drain commercial bank reserves into the TGA, temporarily locking up interbank cash while broad money (M1) remains unchanged until spent.',
         },
         entityDeltas: {
@@ -84,13 +84,13 @@ export const scenarios: Scenario[] = [
         macroImpact: {
           m0Change: 'Unchanged ($1,100)',
           m1Change: '+$100 ($1,450)',
-          tgaChange: '-$100 ($200 back to initial)',
+          tgaChange: '-$100 ($1,000 back to initial)',
           keyTakeaway: 'Fiscal spending CREATES broad money (M1) and restores bank reserves! The government spend-and-tax/issue cycle is a primary engine of private deposit creation.',
         },
         entityDeltas: {
           treasury: {
             assets: { tr_tga: -100 },
-            equity: { tr_net_fiscal: 100 },
+            equity: { tr_net_fiscal: -100 },
           },
           central_bank: {
             liabilities: { cb_tga: -100, cb_reserves_bank_a: 100 },

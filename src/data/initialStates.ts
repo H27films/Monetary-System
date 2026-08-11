@@ -12,11 +12,12 @@ export const createDefaultInitialState = (): Record<EntityId, EntityBalanceSheet
     assets: [
       { id: 'cb_us_treasuries', name: 'US Treasuries (SOMA)', amount: 450, category: 'asset', detail: 'Government debt purchased via open market operations' },
       { id: 'cb_discount_loans', name: 'Discount Loans / DW', amount: 100, category: 'asset', detail: 'Direct liquidity provided to commercial banks' },
+      { id: 'cb_mbs_assets', name: 'Agency MBS & SOMA Portfolio Assets', amount: 800, category: 'asset', detail: 'Mortgage-backed securities and Federal Reserve portfolio assets' },
     ],
     liabilities: [
       { id: 'cb_reserves_bank_a', name: 'Bank A Reserves', amount: 200, category: 'liability', detail: 'Digital settlement funds owned by Bank A' },
       { id: 'cb_reserves_bank_b', name: 'Bank B Reserves', amount: 100, category: 'liability', detail: 'Digital settlement funds owned by Bank B' },
-      { id: 'cb_tga', name: 'Treasury General Account (TGA)', amount: 200, category: 'liability', detail: 'Government operating cash checking account' },
+      { id: 'cb_tga', name: 'Treasury General Account (TGA)', amount: 1000, category: 'liability', detail: 'Government operating cash checking account' },
       { id: 'cb_currency_notes', name: 'Currency Notes in Circulation', amount: 50, category: 'liability', detail: 'Physical cash held by households and businesses' },
       { id: 'cb_rrp_facility', name: 'Overnight Reverse Repo Facility (ON RRP)', amount: 0, category: 'liability', detail: 'Overnight cash deposited by non-bank counterparties (Pension/MMFs)' },
     ],
@@ -122,14 +123,13 @@ export const createDefaultInitialState = (): Record<EntityId, EntityBalanceSheet
     color: 'rose',
     description: 'Collects taxes, issues government bonds, and spends money into the economy through its TGA account at the Fed.',
     assets: [
-      { id: 'tr_tga', name: 'TGA Cash (at Central Bank)', amount: 200, category: 'asset', detail: 'Operating cash balance held at the Fed' },
-      { id: 'tr_tax_receivables', name: 'Tax Receivables & Revenue Claims', amount: 600, category: 'asset', detail: 'Accrued taxes due and projected sovereign revenue claims' },
+      { id: 'tr_tga', name: 'TGA Cash (at Central Bank)', amount: 1000, category: 'asset', detail: 'Operating cash balance held at the Fed' },
     ],
     liabilities: [
       { id: 'tr_debt_issued', name: 'Total US Debt Issued', amount: 800, category: 'liability', detail: 'Total outstanding Treasury bonds ($450B Fed + $120B BankA + $50B BankB + $100B Pension + $40B Hedge Fund + $20B Corp + $20B Ind)' },
     ],
     equity: [
-      { id: 'tr_net_fiscal', name: 'Sovereign Fiscal Balance', amount: 0, category: 'equity', detail: 'Net sovereign fiscal equity balance' },
+      { id: 'tr_net_fiscal', name: 'Sovereign Fiscal Balance', amount: 200, category: 'equity', detail: 'Net sovereign fiscal equity balance' },
     ],
   },
 
