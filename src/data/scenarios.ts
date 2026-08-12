@@ -1603,4 +1603,212 @@ export const scenarios: Scenario[] = [
       },
     ],
   },
+
+  {
+    id: 'mmf-disintermediation-and-repo',
+    title: '11. Money Market Fund (MMF) Inflows, Treasury Purchases & Disintermediation',
+    category: 'Liquidity & Cash',
+    difficulty: 'Intermediate',
+    description: 'Explore the 3-step monetary mechanics of Money Market Fund (MMF) flows: retail deposit shifts, secondary market Treasury purchases where bank deposits remain unchanged, and direct Fed ON RRP placement that drains bank deposits.',
+    realWorldContext: 'When a retail investor moves bank deposits into an MMF, what happens to bank deposits and reserves? This scenario demonstrates how secondary market Treasury trading between non-banks leaves bank deposits intact, whereas direct investment in Fed ON RRP or primary Treasury auctions drains bank reserves and deposits.',
+    initialState: createDefaultInitialState(),
+    steps: [
+      {
+        stepNumber: 1,
+        title: 'Step 1: Individual Allocates $50 Bank Deposit into MMF Shares',
+        subtitle: 'Retail Deposit Reclassification to Institutional Money Fund',
+        description: 'A Private Individual transfers $50 from their commercial bank checking deposit at Bank A into a Money Market Fund (Pension/Non-Bank Fund). In return, the Individual receives $50 of MMF Shares.',
+        accountingExplanation: 'Individual: Bank A Deposits -$50, Money Market Fund Shares +$50. Pension/MMF Fund: Bank Deposits (at Bank A) +$50, Future Obligations / MMF Shares +$50. Bank A: Individual Deposits -$50, Pension Fund Deposits +$50. Fed Reserves: Unchanged! Total Broad Money (M1): Unchanged ($1,350).',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: 'Unchanged ($1,350 - reclassified from retail checking to institutional deposit)',
+          tgaChange: 'Unchanged ($1,000)',
+          keyTakeaway: 'Retail inflows into an MMF do NOT shrink total bank deposits or reserves! Commercial bank liabilities simply shift from an individual checking account to an MMF deposit account at the same bank.',
+        },
+        entityDeltas: {
+          individual: {
+            assets: { ind_dep_bank_a: -50, ind_mmf_shares: 50 },
+          },
+          pension_fund: {
+            assets: { pf_bank_dep: 50 },
+            liabilities: { pf_obligations: 50 },
+          },
+          bank_a: {
+            liabilities: { ba_dep_ind: -50, ba_dep_pension: 50 },
+          },
+          central_bank: {},
+          bank_b: {},
+          treasury: {},
+          corporation: {},
+          hedge_fund: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_11_1_1',
+            fromEntity: 'individual',
+            toEntity: 'bank_a',
+            assetType: 'Deposit Reassignment',
+            amount: 50,
+            description: 'Individual shifts $50 deposit to MMF account at Bank A',
+          },
+          {
+            id: 'fm_11_1_2',
+            fromEntity: 'pension_fund',
+            toEntity: 'individual',
+            assetType: 'MMF Share Certificate',
+            amount: 50,
+            description: 'MMF issues $50 fund shares to Individual investor',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j11_1',
+            stepNumber: 1,
+            timestamp: '09:30:00',
+            title: 'MMF Share Purchase & Deposit Transfer',
+            description: 'Individual invests $50 in MMF; deposit remains inside Bank A.',
+            entries: [
+              { entityId: 'individual', accountName: 'Money Market Fund Shares', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'individual', accountName: 'Bank A Deposits', type: 'credit', amount: 50, category: 'asset' },
+              { entityId: 'bank_a', accountName: 'Individual Deposits', type: 'debit', amount: 50, category: 'liability' },
+              { entityId: 'bank_a', accountName: 'Pension Fund Deposits', type: 'credit', amount: 50, category: 'liability' },
+              { entityId: 'pension_fund', accountName: 'Bank Deposits (at Bank A)', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'pension_fund', accountName: 'Future Pension Obligations', type: 'credit', amount: 50, category: 'liability' },
+            ],
+          },
+        ],
+      },
+
+      {
+        stepNumber: 2,
+        title: 'Step 2: MMF Purchases $50 Treasuries from Hedge Fund (Secondary Market)',
+        subtitle: 'Non-Bank to Non-Bank Asset Swap: Total Bank Deposits Unchanged',
+        description: 'The MMF uses its $50 bank deposit at Bank A to purchase $50 of existing US Treasuries from a Hedge Fund in the secondary market.',
+        accountingExplanation: 'MMF Fund: Bank Deposits (at Bank A) -$50, US Treasuries +$50. Hedge Fund: US Treasuries -$50, Bank Deposits (at Bank A) +$50. Bank A: Pension Fund Deposits -$50, Corporate/Hedge Fund Deposits +$50. System-Wide Deposits: UNCHANGED! Fed Reserves: UNCHANGED!',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100)',
+          m1Change: 'Unchanged ($1,350 - deposits shifted between institutional non-bank accounts)',
+          tgaChange: 'Unchanged ($1,000)',
+          keyTakeaway: 'When an MMF buys existing Treasuries from another non-bank institution (Hedge Fund), total commercial bank deposits and central bank reserves DO NOT CHANGE in aggregate across the banking system!',
+        },
+        entityDeltas: {
+          pension_fund: {
+            assets: { pf_bank_dep: -50, pf_treasuries: 50 },
+          },
+          hedge_fund: {
+            assets: { hf_treasuries: -50, hf_bank_dep: 50 },
+          },
+          bank_a: {
+            liabilities: { ba_dep_pension: -50, ba_dep_corp: 50 },
+          },
+          central_bank: {},
+          bank_b: {},
+          individual: {},
+          treasury: {},
+          corporation: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_11_2_1',
+            fromEntity: 'pension_fund',
+            toEntity: 'hedge_fund',
+            assetType: 'Secondary Market Bond Purchase',
+            amount: 50,
+            description: 'MMF buys $50 US Treasuries from Hedge Fund',
+          },
+          {
+            id: 'fm_11_2_2',
+            fromEntity: 'bank_a',
+            toEntity: 'bank_a',
+            assetType: 'Internal Deposit Transfer',
+            amount: 50,
+            description: 'Bank A reassigns $50 deposit liability from MMF to Hedge Fund',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j11_2',
+            stepNumber: 2,
+            timestamp: '11:15:00',
+            title: 'Secondary Market Treasury Trade Between Non-Banks',
+            description: 'MMF acquires Treasuries from Hedge Fund; total deposits remain intact.',
+            entries: [
+              { entityId: 'pension_fund', accountName: 'US Treasuries', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'pension_fund', accountName: 'Bank Deposits (at Bank A)', type: 'credit', amount: 50, category: 'asset' },
+              { entityId: 'hedge_fund', accountName: 'Bank Deposits (at Bank A)', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'hedge_fund', accountName: 'US Treasuries', type: 'credit', amount: 50, category: 'asset' },
+              { entityId: 'bank_a', accountName: 'Pension Fund Deposits', type: 'debit', amount: 50, category: 'liability' },
+              { entityId: 'bank_a', accountName: 'Corporate Deposits', type: 'credit', amount: 50, category: 'liability' },
+            ],
+          },
+        ],
+      },
+
+      {
+        stepNumber: 3,
+        title: 'Step 3: MMF Parks $50 Investor Cash Directly in Fed ON RRP Facility',
+        subtitle: 'Direct Central Bank Access: Bank Deposit & Reserve Contraction',
+        description: 'In this step, the MMF allocates $50 of investor funds directly into the Central Bank Overnight Reverse Repo (ON RRP) facility (or buys new Treasuries directly at auction into TGA), bypassing commercial banks.',
+        accountingExplanation: 'MMF Fund: Bank Deposits (at Bank A) -$50, ON RRP Deposits at Central Bank +$50. Bank A: Pension Fund Deposits -$50, Reserves at Central Bank -$50. Central Bank: Bank A Reserves -$50, Overnight Reverse Repo Facility (ON RRP) +$50. Broad Money (M1): CONTRACTS by $50!',
+        macroImpact: {
+          m0Change: 'Unchanged ($1,100 - reserve to ON RRP liability shift)',
+          m1Change: '-$50 ($1,300 - commercial bank deposits shrink)',
+          tgaChange: 'Unchanged ($1,000)',
+          keyTakeaway: 'In sharp contrast to Step 2: when an MMF uses investor cash to park directly at the Fed ON RRP facility (or buy direct Treasury issuance into TGA), commercial bank deposits and bank reserves shrink directly out of the commercial banking system!',
+        },
+        entityDeltas: {
+          pension_fund: {
+            assets: { pf_bank_dep: -50, pf_rrp_asset: 50 },
+          },
+          bank_a: {
+            assets: { ba_reserves: -50 },
+            liabilities: { ba_dep_pension: -50 },
+          },
+          central_bank: {
+            liabilities: { cb_reserves_bank_a: -50, cb_rrp_facility: 50 },
+          },
+          bank_b: {},
+          individual: {},
+          treasury: {},
+          corporation: {},
+          hedge_fund: {},
+        },
+        flowingMoney: [
+          {
+            id: 'fm_11_3_1',
+            fromEntity: 'pension_fund',
+            toEntity: 'bank_a',
+            assetType: 'Commercial Deposit Drain',
+            amount: 50,
+            description: 'MMF pulls $50 deposit from Bank A to place into Central Bank ON RRP',
+          },
+          {
+            id: 'fm_11_3_2',
+            fromEntity: 'bank_a',
+            toEntity: 'central_bank',
+            assetType: 'Reserve Settlement',
+            amount: 50,
+            description: 'Bank A transfers $50 reserves to Central Bank ON RRP facility',
+          },
+        ],
+        journalEntries: [
+          {
+            id: 'j11_3',
+            stepNumber: 3,
+            timestamp: '15:45:00',
+            title: 'Direct Non-Bank Fed Placement (ON RRP Disintermediation)',
+            description: 'MMF parks cash in Fed ON RRP, draining bank deposits and reserves.',
+            entries: [
+              { entityId: 'pension_fund', accountName: 'ON RRP Deposits at Central Bank', type: 'debit', amount: 50, category: 'asset' },
+              { entityId: 'pension_fund', accountName: 'Bank Deposits (at Bank A)', type: 'credit', amount: 50, category: 'asset' },
+              { entityId: 'bank_a', accountName: 'Pension Fund Deposits', type: 'debit', amount: 50, category: 'liability' },
+              { entityId: 'bank_a', accountName: 'Reserves at Central Bank', type: 'credit', amount: 50, category: 'asset' },
+              { entityId: 'central_bank', accountName: 'Bank A Reserves', type: 'debit', amount: 50, category: 'liability' },
+              { entityId: 'central_bank', accountName: 'Overnight Reverse Repo Facility (ON RRP)', type: 'credit', amount: 50, category: 'liability' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ];

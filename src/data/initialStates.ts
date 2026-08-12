@@ -105,6 +105,7 @@ export const createDefaultInitialState = (): Record<EntityId, EntityBalanceSheet
       { id: 'ind_dep_bank_b', name: 'Bank B Deposits', amount: 100, category: 'asset', detail: 'Checking & savings account at Bank B' },
       { id: 'ind_physical_cash', name: 'Physical Currency Notes', amount: 20, category: 'asset', detail: 'Federal Reserve cash notes in wallet' },
       { id: 'ind_treasuries', name: 'Direct US Treasuries', amount: 20, category: 'asset', detail: 'TreasuryDirect or brokerage holdings' },
+      { id: 'ind_mmf_shares', name: 'Money Market Fund Shares', amount: 0, category: 'asset', detail: 'Shares held in Money Market Mutual Funds' },
     ],
     liabilities: [
       { id: 'ind_bank_loans', name: 'Bank Loans & Mortgages', amount: 40, category: 'liability', detail: 'Mortgages and consumer loan obligations owed to banks' },
