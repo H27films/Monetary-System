@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { EntityBalanceSheet, JournalEntry } from '../types/monetary';
 import { formatCurrency } from '../utils/monetaryEngine';
+import { ParticipantAdjustmentsSummary } from './ParticipantAdjustmentsSummary';
 import {
   Wrench,
   RotateCcw,
@@ -19,6 +20,7 @@ import {
   HelpCircle,
   Briefcase,
   TrendingUp,
+  Layers,
 } from 'lucide-react';
 
 interface SandboxBuilderProps {
@@ -100,6 +102,7 @@ export const SandboxBuilder: React.FC<SandboxBuilderProps> = ({
   onResetSandbox,
 }) => {
   const [sandboxMode, setSandboxMode] = useState<'manual' | 'ai'>('manual');
+  const [showVectorSummary, setShowVectorSummary] = useState<boolean>(false);
   const [txType, setTxType] = useState<TxType>('bank_loan');
   const [amount, setAmount] = useState<number>(50);
   const [logMessages, setLogMessages] = useState<Array<{ title: string; desc: string; explanation?: string }>>([]);
@@ -480,6 +483,19 @@ export const SandboxBuilder: React.FC<SandboxBuilderProps> = ({
           </div>
 
           <button
+            onClick={() => setShowVectorSummary(!showVectorSummary)}
+            className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-sans font-medium rounded-lg border shadow-xs transition cursor-pointer ${
+              showVectorSummary
+                ? 'bg-amber-100 text-amber-900 border-amber-300'
+                : 'bg-[#FAF8F5] hover:bg-zinc-100 text-zinc-700 border-[#E2DDD5]'
+            }`}
+            title={showVectorSummary ? 'Hide Step Vector Summary' : 'Show Step Vector Summary'}
+          >
+            <Layers className="w-3.5 h-3.5" />
+            <span>{showVectorSummary ? 'Hide Vector Summary' : '+ Vector Summary'}</span>
+          </button>
+
+          <button
             onClick={onResetSandbox}
             className="flex items-center space-x-1.5 px-3 py-1.5 bg-[#FAF8F5] hover:bg-zinc-100 text-zinc-700 text-xs font-sans font-medium rounded-lg border border-[#E2DDD5] shadow-xs transition cursor-pointer"
           >
@@ -666,6 +682,16 @@ export const SandboxBuilder: React.FC<SandboxBuilderProps> = ({
               </div>
             ))}
           </div>
+        </div>
+      )}
+      {/* Embedded Vector Summary when active */}
+      {showVectorSummary && currentSheets && (
+        <div className="pt-2 border-t border-[#E2DDD5]">
+          <ParticipantAdjustmentsSummary
+            currentBalanceSheets={currentSheets}
+            title="Sandbox Balance Adjustments Vector Summary"
+            onClose={() => setShowVectorSummary(false)}
+          />
         </div>
       )}
     </div>

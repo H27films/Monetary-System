@@ -1,21 +1,36 @@
 import React from 'react';
 import { EntityBalanceSheet, EntityId } from '../types/monetary';
 import { formatCurrency } from '../utils/monetaryEngine';
-import { Landmark, Vault, Building2, Wallet, User } from 'lucide-react';
+import { Landmark, Vault, Building2, Wallet, User, Briefcase, LineChart, Globe } from 'lucide-react';
 
 interface ParticipantAdjustmentsSummaryProps {
-  currentBalanceSheets: Record<EntityId, EntityBalanceSheet>;
+  currentBalanceSheets: Record<string, EntityBalanceSheet>;
   title?: string;
   onClose?: () => void;
 }
 
-const entitiesList = [
-  { id: 'central_bank' as EntityId, name: 'Central Bank (Fed)', shortName: 'Fed', icon: <Landmark className="w-4 h-4" /> },
-  { id: 'treasury' as EntityId, name: 'US Treasury', shortName: 'Treasury', icon: <Vault className="w-4 h-4" /> },
-  { id: 'bank_a' as EntityId, name: 'Commercial Bank A', shortName: 'Bank A', icon: <Building2 className="w-4 h-4" /> },
-  { id: 'bank_b' as EntityId, name: 'Commercial Bank B', shortName: 'Bank B', icon: <Building2 className="w-4 h-4" /> },
-  { id: 'pension_fund' as EntityId, name: 'Pension Fund / NDFI', shortName: 'Pension', icon: <Wallet className="w-4 h-4" /> },
-  { id: 'individual' as EntityId, name: 'Individual / Household', shortName: 'Household', icon: <User className="w-4 h-4" /> },
+const ALL_ENTITY_METADATA: Record<string, { name: string; shortName: string; icon: React.ReactNode }> = {
+  central_bank: { name: 'Central Bank (Fed)', shortName: 'Fed', icon: <Landmark className="w-4 h-4" /> },
+  treasury: { name: 'US Treasury', shortName: 'Treasury', icon: <Vault className="w-4 h-4" /> },
+  bank_a: { name: 'Commercial Bank A', shortName: 'Bank A', icon: <Building2 className="w-4 h-4" /> },
+  bank_b: { name: 'Commercial Bank B', shortName: 'Bank B', icon: <Building2 className="w-4 h-4" /> },
+  pension_fund: { name: 'Pension Fund / NDFI', shortName: 'Pension', icon: <Wallet className="w-4 h-4" /> },
+  individual: { name: 'Individual / Household', shortName: 'Household', icon: <User className="w-4 h-4" /> },
+  corporation: { name: 'Private Corporation', shortName: 'Corporation', icon: <Briefcase className="w-4 h-4" /> },
+  hedge_fund: { name: 'Global Macro Hedge Fund', shortName: 'Hedge Fund', icon: <LineChart className="w-4 h-4" /> },
+  foreign_bank: { name: 'Foreign Correspondent Bank', shortName: 'Foreign Bank', icon: <Globe className="w-4 h-4" /> },
+};
+
+const ENTITY_ORDER: string[] = [
+  'central_bank',
+  'treasury',
+  'bank_a',
+  'bank_b',
+  'pension_fund',
+  'individual',
+  'corporation',
+  'hedge_fund',
+  'foreign_bank',
 ];
 
 export const ParticipantAdjustmentsSummary: React.FC<ParticipantAdjustmentsSummaryProps> = ({
@@ -23,27 +38,42 @@ export const ParticipantAdjustmentsSummary: React.FC<ParticipantAdjustmentsSumma
   title = 'Participant Entities Step Balance Adjustments',
   onClose,
 }) => {
-  const changedEntities = entitiesList
-    .map((ent) => {
-      const sheet = currentBalanceSheets[ent.id];
-      if (!sheet) return null;
-
+  const changedEntities = Object.values(currentBalanceSheets)
+    .filter((sheet): sheet is EntityBalanceSheet => Boolean(sheet))
+    .map((sheet) => {
       const changedAssets = sheet.assets.filter((i) => i.delta !== undefined && i.delta !== 0);
       const changedLiabilities = sheet.liabilities.filter((i) => i.delta !== undefined && i.delta !== 0);
       const changedEquity = sheet.equity.filter((i) => i.delta !== undefined && i.delta !== 0);
 
       const hasChanges = changedAssets.length > 0 || changedLiabilities.length > 0 || changedEquity.length > 0;
-
       if (!hasChanges) return null;
 
+      const meta = ALL_ENTITY_METADATA[sheet.id] || {
+        name: sheet.name || sheet.id,
+        shortName: sheet.shortName || sheet.id,
+        icon: <Building2 className="w-4 h-4" />,
+      };
+
       return {
-        ent,
+        ent: {
+          id: sheet.id,
+          name: sheet.name || meta.name,
+          shortName: sheet.shortName || meta.shortName,
+          icon: meta.icon,
+        },
         changedAssets,
         changedLiabilities,
         changedEquity,
       };
     })
-    .filter(Boolean);
+    .filter((item): item is NonNullable<typeof item> => item !== null)
+    .sort((a, b) => {
+      const indexA = ENTITY_ORDER.indexOf(a.ent.id);
+      const indexB = ENTITY_ORDER.indexOf(b.ent.id);
+      const posA = indexA >= 0 ? indexA : 999;
+      const posB = indexB >= 0 ? indexB : 999;
+      return posA - posB;
+    });
 
   return (
     <div className="bg-white border border-[#E2DDD5] rounded-xl p-4 space-y-3 shadow-xs">
