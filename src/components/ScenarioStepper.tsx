@@ -47,7 +47,24 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
 
   const [headerOffset, setHeaderOffset] = useState<number>(41);
 
-  const currentStep = scenario.steps[activeStepIndex] || scenario.steps[0];
+  const currentStep: MonetaryStep = activeStepIndex === 0
+    ? {
+        stepNumber: 0,
+        title: 'Starting Position: Baseline Balance Sheets',
+        subtitle: 'Initial System State',
+        description: scenario.description || 'Initial balance sheet positions across all central bank, government, commercial bank, and private non-bank entities prior to scenario transactions.',
+        accountingExplanation: 'All balance sheets reflect baseline starting positions with zero transaction deltas. Click Step 1 to execute the first transaction sequence.',
+        macroImpact: {
+          m0Change: 'Baseline Base Money',
+          m1Change: 'Baseline Broad Deposits',
+          tgaChange: 'Baseline TGA Cash',
+          keyTakeaway: 'This is the baseline financial starting position before any monetary transactions or accounting deltas occur in this scenario.',
+        },
+        entityDeltas: {},
+        flowingMoney: [],
+        journalEntries: [],
+      }
+    : scenario.steps[activeStepIndex - 1] || scenario.steps[0];
 
   // Detect when main big box has scrolled past off screen and calculate exact header bottom edge
   useEffect(() => {
@@ -77,7 +94,7 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
     let timer: any;
     if (isPlaying) {
       timer = setInterval(() => {
-        if (activeStepIndex < scenario.steps.length - 1) {
+        if (activeStepIndex < scenario.steps.length) {
           onStepChange(activeStepIndex + 1);
         } else {
           setIsPlaying(false);
@@ -100,11 +117,13 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
               {/* Step Indicator & Single-Line Summary */}
               <div className="flex items-center space-x-3 min-w-0">
                 <span className="shrink-0 font-sans font-bold px-2.5 py-1 rounded-md bg-[#1A1A1A] text-white text-xs tracking-wider uppercase">
-                  STEP {activeStepIndex + 1}
+                  {activeStepIndex === 0 ? 'STARTING POSITION' : `STEP ${activeStepIndex}`}
                 </span>
                 <div className="min-w-0">
                   <div className="font-serif font-medium text-base sm:text-lg text-[#1A1A1A] truncate">
-                    {currentStep.title.replace(/^Step\s*\d+\s*[:\—\-]\s*/i, '')}
+                    {activeStepIndex === 0
+                      ? 'Baseline Initial Balance Sheets'
+                      : currentStep.title.replace(/^Step\s*\d+\s*[:\—\-]\s*/i, '')}
                   </div>
                 </div>
               </div>
@@ -122,24 +141,41 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
 
                 {/* Quick Step Pills */}
                 <div className="hidden lg:flex items-center space-x-1">
-                  {scenario.steps.map((st, idx) => (
-                    <button
-                      key={st.stepNumber}
-                      onClick={() => {
-                        setIsPlaying(false);
-                        onStepChange(idx);
-                      }}
-                      className={`px-2 py-1 rounded text-[11px] font-sans font-medium transition cursor-pointer border ${
-                        idx === activeStepIndex
-                          ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
-                          : idx < activeStepIndex
-                          ? 'bg-zinc-100 text-zinc-700 border-zinc-200 hover:bg-zinc-200'
-                          : 'bg-white text-zinc-400 border-zinc-200 hover:bg-zinc-50'
-                      }`}
-                    >
-                      S{st.stepNumber}
-                    </button>
-                  ))}
+                  <button
+                    key="pill-start"
+                    onClick={() => {
+                      setIsPlaying(false);
+                      onStepChange(0);
+                    }}
+                    className={`px-2 py-1 rounded text-[11px] font-sans font-medium transition cursor-pointer border ${
+                      activeStepIndex === 0
+                        ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
+                        : 'bg-zinc-100 text-zinc-700 border-zinc-200 hover:bg-zinc-200'
+                    }`}
+                  >
+                    Start
+                  </button>
+                  {scenario.steps.map((st, idx) => {
+                    const stepNum = idx + 1;
+                    return (
+                      <button
+                        key={st.stepNumber}
+                        onClick={() => {
+                          setIsPlaying(false);
+                          onStepChange(stepNum);
+                        }}
+                        className={`px-2 py-1 rounded text-[11px] font-sans font-medium transition cursor-pointer border ${
+                          stepNum === activeStepIndex
+                            ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
+                            : stepNum < activeStepIndex
+                            ? 'bg-zinc-100 text-zinc-700 border-zinc-200 hover:bg-zinc-200'
+                            : 'bg-white text-zinc-400 border-zinc-200 hover:bg-zinc-50'
+                        }`}
+                      >
+                        S{st.stepNumber}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <button
@@ -155,8 +191,8 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
                 </button>
 
                 <button
-                  onClick={() => onStepChange(Math.min(scenario.steps.length - 1, activeStepIndex + 1))}
-                  disabled={activeStepIndex === scenario.steps.length - 1}
+                  onClick={() => onStepChange(Math.min(scenario.steps.length, activeStepIndex + 1))}
+                  disabled={activeStepIndex === scenario.steps.length}
                   className="p-1.5 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-30 text-[#1A1A1A] rounded-lg border border-[#E2DDD5] transition cursor-pointer"
                   title="Next Step"
                 >
@@ -225,8 +261,8 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
               </button>
 
               <button
-                onClick={() => onStepChange(Math.min(scenario.steps.length - 1, activeStepIndex + 1))}
-                disabled={activeStepIndex === scenario.steps.length - 1}
+                onClick={() => onStepChange(Math.min(scenario.steps.length, activeStepIndex + 1))}
+                disabled={activeStepIndex === scenario.steps.length}
                 className="p-2 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-30 text-[#1A1A1A] rounded-lg border border-[#E2DDD5] transition cursor-pointer"
                 title="Next Step"
               >
@@ -265,26 +301,54 @@ export const ScenarioStepper: React.FC<ScenarioStepperProps> = ({
 
           {/* Step Progress Timeline Bar */}
           <div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs font-sans text-zinc-600 mb-2.5">
-              <span className="font-semibold text-[#1A1A1A] shrink-0">
-                Step {activeStepIndex + 1} of {scenario.steps.length}
+            <div className="flex items-center space-x-2.5 text-xs font-sans text-zinc-600 mb-2.5 flex-wrap gap-y-1">
+              <span className="font-semibold text-[#1A1A1A] shrink-0 bg-zinc-100 px-2.5 py-1 rounded-md border border-zinc-200">
+                {activeStepIndex === 0
+                  ? 'Starting Position'
+                  : `Step ${activeStepIndex} of ${scenario.steps.length}`}
               </span>
-              <span className="text-left sm:text-right font-serif text-[#1A1A1A] text-xs sm:text-sm font-medium leading-snug">
+              <span className="font-serif text-[#1A1A1A] text-sm font-medium leading-snug">
                 {currentStep.title}
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {/* Step 0: Starting Position */}
+              <button
+                key="step-0-starting-position"
+                onClick={() => {
+                  setIsPlaying(false);
+                  onStepChange(0);
+                }}
+                className={`flex flex-col justify-between p-3.5 min-h-[80px] rounded-xl text-left border transition duration-150 cursor-pointer ${
+                  activeStepIndex === 0
+                    ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
+                    : activeStepIndex > 0
+                    ? 'bg-zinc-100 text-zinc-800 border-zinc-200 hover:border-zinc-400'
+                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'
+                }`}
+              >
+                <div className="flex items-center justify-between text-xs font-sans font-semibold mb-1">
+                  <span>Starting Position</span>
+                  {activeStepIndex > 0 && <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 ml-1" />}
+                </div>
+                <span className="text-xs font-sans font-medium leading-snug break-words opacity-90">
+                  Baseline Initial Balances
+                </span>
+              </button>
+
+              {/* Scenario Steps (Step 1, Step 2, ...) */}
               {scenario.steps.map((step, idx) => {
-                const isActive = idx === activeStepIndex;
-                const isPassed = idx < activeStepIndex;
+                const stepNum = idx + 1;
+                const isActive = stepNum === activeStepIndex;
+                const isPassed = stepNum < activeStepIndex;
 
                 return (
                   <button
                     key={step.stepNumber}
                     onClick={() => {
                       setIsPlaying(false);
-                      onStepChange(idx);
+                      onStepChange(stepNum);
                     }}
                     className={`flex flex-col justify-between p-3.5 min-h-[80px] rounded-xl text-left border transition duration-150 cursor-pointer ${
                       isActive

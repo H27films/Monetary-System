@@ -36,10 +36,10 @@ export const calculateCurrentState = (
     sheet.equity.forEach((item) => (item.delta = 0));
   });
 
-  // Apply deltas up to activeStepIndex
-  for (let sIndex = 0; sIndex <= activeStepIndex && sIndex < steps.length; sIndex++) {
+  // Apply deltas up to activeStepIndex (activeStepIndex = 0 -> 0 steps applied for Baseline Starting Position)
+  for (let sIndex = 0; sIndex < activeStepIndex && sIndex < steps.length; sIndex++) {
     const step = steps[sIndex];
-    const isCurrentActiveStep = sIndex === activeStepIndex;
+    const isCurrentActiveStep = sIndex === activeStepIndex - 1;
 
     Object.entries(step.entityDeltas).forEach(([entityKey, deltaGroup]) => {
       const entityId = entityKey as EntityId;

@@ -101,7 +101,24 @@ export default function App() {
   const sandboxDisplayBalanceSheets = sandboxState.balanceSheets || cleanInitialSheets;
   const displayMacroStats = calculatedState.macroStats;
 
-  const currentStep = activeScenario.steps[activeStepIndex] || activeScenario.steps[0];
+  const currentStep = activeStepIndex === 0
+    ? {
+        stepNumber: 0,
+        title: 'Starting Position: Baseline Balance Sheets',
+        subtitle: 'Initial System State',
+        description: activeScenario.description || 'Initial balance sheet positions across all central bank, government, commercial bank, and private non-bank entities prior to scenario transactions.',
+        accountingExplanation: 'All balance sheets reflect baseline starting positions with zero transaction deltas. Click Step 1 to execute the first transaction sequence.',
+        macroImpact: {
+          m0Change: 'Baseline Base Money',
+          m1Change: 'Baseline Broad Deposits',
+          tgaChange: 'Baseline TGA Cash',
+          keyTakeaway: 'This is the baseline financial starting position before any monetary transactions or accounting deltas occur in this scenario.',
+        },
+        entityDeltas: {},
+        flowingMoney: [],
+        journalEntries: [],
+      }
+    : activeScenario.steps[activeStepIndex - 1] || activeScenario.steps[0];
 
   const handleSelectScenario = (id: string) => {
     setActiveScenarioId(id);
@@ -138,9 +155,11 @@ export default function App() {
 
   // List of all journals for journal tab
   const allJournals = useMemo(() => {
-    const stepJournals = activeScenario.steps
-      .slice(0, activeStepIndex + 1)
-      .flatMap((s) => s.journalEntries || []);
+    const stepJournals = activeStepIndex === 0
+      ? []
+      : activeScenario.steps
+          .slice(0, activeStepIndex)
+          .flatMap((s) => s.journalEntries || []);
 
     return [...sandboxState.customJournals, ...stepJournals];
   }, [activeScenario, activeStepIndex, sandboxState.customJournals]);
@@ -195,7 +214,9 @@ export default function App() {
                     Live Balance Sheet Ledger Cards
                   </h2>
                   <p className="text-xs font-sans text-zinc-600 mt-1 max-w-2xl leading-relaxed">
-                    Double-entry T-accounts highlighting deltas for Step {activeStepIndex + 1}: Assets | Liabilities | Equity
+                    {activeStepIndex === 0
+                      ? 'Double-entry T-accounts displaying baseline starting balance sheet positions.'
+                      : `Double-entry T-accounts highlighting deltas for Step ${activeStepIndex}: Assets | Liabilities | Equity`}
                   </p>
                 </div>
               </div>
