@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Landmark, ArrowLeftRight, Wrench, BarChart3, RotateCcw, Sparkles, FileText, Settings, ChevronDown, Check } from 'lucide-react';
+import { Landmark, ArrowLeftRight, Wrench, BarChart3, RotateCcw, Sparkles, FileText, Settings, ChevronDown, Check, BookOpen } from 'lucide-react';
 import { Scenario } from '../types/monetary';
 
 interface HeaderProps {
@@ -11,6 +11,8 @@ interface HeaderProps {
   onReset: () => void;
   onOpenSettings?: () => void;
   isCustomInitial?: boolean;
+  onOpenBrandMenu?: () => void;
+  onSwitchToSimpleMechanics?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -22,6 +24,8 @@ export const Header: React.FC<HeaderProps> = ({
   onReset,
   onOpenSettings,
   isCustomInitial,
+  onOpenBrandMenu,
+  onSwitchToSimpleMechanics,
 }) => {
   const [isScenarioDropdownOpen, setIsScenarioDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -43,19 +47,30 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-[#E8E4DC]">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between py-3.5 gap-3">
           
-          {/* Brand Identity */}
+          {/* Brand Identity / Pop-up Trigger (Clickable Landmark Icon) */}
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-[#1A1A1A] text-[#FAF8F5] rounded-lg shadow-xs">
-              <Landmark className="w-5 h-5" />
-            </div>
-            <div>
+            <button
+              onClick={onOpenBrandMenu}
+              className="p-2.5 bg-[#1A1A1A] hover:bg-zinc-800 text-[#FAF8F5] rounded-xl shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer group flex items-center justify-center relative ring-2 ring-transparent hover:ring-amber-500/50"
+              title="Click icon to switch between Simple Mechanics and Monetary System Simulator"
+              aria-label="Switch between Simple Mechanics and Monetary System Simulator"
+            >
+              <Landmark className="w-5 h-5 text-[#FAF8F5]" />
+              {/* Subtle badge indicator on icon */}
+              <span className="absolute -bottom-1 -right-1 flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500 border-2 border-white"></span>
+              </span>
+            </button>
+            <div
+              onClick={onOpenBrandMenu}
+              className="cursor-pointer group"
+              title="Click to switch between Simple Mechanics and Monetary System Simulator"
+            >
               <div className="flex items-center space-x-2">
-                <h1 className="text-xl font-serif font-normal tracking-tight text-[#1A1A1A] leading-none">
+                <h1 className="text-xl font-serif font-normal tracking-tight text-[#1A1A1A] leading-none group-hover:text-amber-900 transition">
                   Monetary System Mechanics
                 </h1>
-                <span className="text-[10px] font-sans font-medium uppercase tracking-wider px-2 py-0.5 bg-zinc-200/80 text-zinc-700 rounded-md">
-                  Double-Entry Simulator
-                </span>
               </div>
               <p className="text-xs font-serif italic text-zinc-500 mt-0.5">
                 Central Bank • Sovereign Treasury • Commercial Banking • Institutional Capital
@@ -63,9 +78,21 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Scenario Selector & Reset Button */}
+          {/* Scenario Selector, Simple Mechanics Switcher, & Reset Button */}
           <div className="flex flex-wrap items-center gap-2">
             
+            {/* Quick Switch to Simple Mechanics */}
+            {onSwitchToSimpleMechanics && (
+              <button
+                onClick={onSwitchToSimpleMechanics}
+                className="flex items-center space-x-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-sans font-semibold rounded-lg border border-amber-300/80 shadow-xs transition cursor-pointer"
+                title="Switch to Simple Mechanics textbook T-accounts page"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-amber-700" />
+                <span>Simple Mechanics</span>
+              </button>
+            )}
+
             {/* Website Custom Scenario Dropdown */}
             <div className="relative z-[100]" ref={dropdownRef}>
               <button

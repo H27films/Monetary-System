@@ -14,6 +14,8 @@ import { JournalLogView } from './components/JournalLogView';
 import { BalanceChartView } from './components/BalanceChartView';
 import { AiExplainerModal } from './components/AiExplainerModal';
 import { SettingsModal } from './components/SettingsModal';
+import { SimpleMechanicsView } from './components/SimpleMechanicsView';
+import { BrandSwitcherModal } from './components/BrandSwitcherModal';
 import { Users } from 'lucide-react';
 
 import { scenarios } from './data/scenarios';
@@ -22,6 +24,9 @@ import { calculateCurrentState, getCleanInitialState } from './utils/monetaryEng
 import { EntityId, EntityBalanceSheet, MonetaryStep, JournalEntry } from './types/monetary';
 
 export default function App() {
+  const [currentPage, setCurrentPage] = useState<'simulator' | 'simple_mechanics'>('simulator');
+  const [isBrandModalOpen, setIsBrandModalOpen] = useState<boolean>(false);
+
   const [activeScenarioId, setActiveScenarioId] = useState<string>(scenarios[0].id);
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<'t_accounts' | 'flow' | 'sandbox' | 'journal' | 'chart' | 'ai'>('t_accounts');
@@ -164,6 +169,23 @@ export default function App() {
     return [...sandboxState.customJournals, ...stepJournals];
   }, [activeScenario, activeStepIndex, sandboxState.customJournals]);
 
+  if (currentPage === 'simple_mechanics') {
+    return (
+      <>
+        <SimpleMechanicsView
+          onSwitchToSimulator={() => setCurrentPage('simulator')}
+          onOpenBrandMenu={() => setIsBrandModalOpen(true)}
+        />
+        <BrandSwitcherModal
+          isOpen={isBrandModalOpen}
+          onClose={() => setIsBrandModalOpen(false)}
+          currentPage={currentPage}
+          onSelectPage={(page) => setCurrentPage(page)}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1A1A] font-sans flex flex-col selection:bg-[#1A1A1A] selection:text-white">
       {/* Top Navbar */}
@@ -176,6 +198,8 @@ export default function App() {
         onReset={handleReset}
         onOpenSettings={() => setIsSettingsOpen(true)}
         isCustomInitial={customInitialSheets !== null}
+        onOpenBrandMenu={() => setIsBrandModalOpen(true)}
+        onSwitchToSimpleMechanics={() => setCurrentPage('simple_mechanics')}
       />
 
       {/* Main Content Area */}
@@ -366,6 +390,14 @@ export default function App() {
           setActiveStepIndex(0);
           setSandboxState({ balanceSheets: null, customJournals: [] });
         }}
+      />
+
+      {/* Brand / Mode Switcher Modal */}
+      <BrandSwitcherModal
+        isOpen={isBrandModalOpen}
+        onClose={() => setIsBrandModalOpen(false)}
+        currentPage={currentPage}
+        onSelectPage={(page) => setCurrentPage(page)}
       />
 
       {/* Footer */}
